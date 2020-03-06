@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Kanit&display=swap');
+html, body, .main-bg {
+    background-color: #710000;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    font-family: 'Kanit', sans-serif;
+}
+#home-box {
+    margin-top: 20vh;
+}
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+#begin-button {
+    background-color: #FFC700;
+    color: black;
+}
