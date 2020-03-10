@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./Question.css";
 import NavBar from "./NavBar";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
+import { FaChevronCircleLeft, FaChevronCircleRight, FaCircle } from "react-icons/fa";
 
 class Question extends Component {
   constructor(props) {
@@ -10,12 +10,17 @@ class Question extends Component {
     this.state = {
       questionIdx: 0,
       listAnswer: [0,0,0,0,0,0,0,0,0],
+      maxAnsQuest: 0,
     };
   }
 
   nextQuestion = () => {
-    if(this.state.questionIdx < 9){
+    if(this.state.listAnswer[this.state.questionIdx] !== 0){
+      if(this.state.questionIdx < 8){
         this.setState({questionIdx: this.state.questionIdx + 1});
+      }
+    } else {
+      alert("โปรดเลือกคำตอบก่อนไปข้อถัดไป");
     }
   };
 
@@ -35,18 +40,18 @@ class Question extends Component {
       "เบื่อ ไม่สนใจอยากทำอะไร",
       "ไม่สบายใจ ซึมเศร้า ท้อแท้",
       "หลับยาก หรือหลับๆ ตื่นๆ หรือหลับมากไป",
-      "เหนื่อยง่าย หรือ ไม่ค่อยมีแรง",
       "เบื่ออาหาร หรือ กินมากเกินไป",
       "รู้สึกไม่ดีกับตัวเอง คิดว่าตัวเองล้มเหลวหรือทำให้ตนเองหรือครอบครัวผิดหวัง",
       "สมาธิไม่ดีเวลาทำอะไร เช่น ดูโทรทัศน์ ฟังวิทยุ หรือทำงานที่ต้องใช้ความตั้งใจ",
+      "เหนื่อยง่าย หรือ ไม่ค่อยมีแรง",
       "พูดช้า ทำอะไรช้าลง จนคนอื่นสังเกตเห็นได้ หรือกระสับกระส่ายไม่สามารถอยู่นิ่งได้เหมือนที่เคยเป็น",
       "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี"
     ];
     const answerList = [
-      "ไม่มีเลย",
-      "เป็นบางวัน 1-7 วัน",
-      "เป็นบ่อย >7 วัน",
-      "เป็นทุกวัน"
+      <h4>ไม่มีเลย</h4>,
+      <h4>เป็นบางวัน 1-7 วัน</h4>,
+      <h4>เป็นบ่อย >7 วัน</h4>,
+      <h4>เป็นทุกวัน</h4>
     ];
     var answerDisplay = answerList.map((ans, idx) => (
       <Form.Check key={idx}
@@ -59,25 +64,26 @@ class Question extends Component {
           let listAns = this.state.listAnswer;
           listAns[this.state.questionIdx] = idx+1;
           this.setState({listAnswer: listAns});
-          alert(this.state.listAnswer);
         }}
         checked={this.state.listAnswer[this.state.questionIdx] === idx+1}
       />
     ));
-    var questionDisp = <h3>{questionList[this.state.questionIdx]}</h3>;
+    var questionDisp = <h4>ข้อ {this.state.questionIdx+1} {questionList[this.state.questionIdx]}</h4>;
+    //var progressCircle = this.state.listAnswer.filter((ans)=>{ans !== 0});
+
     return (
       <div className="main-bg">
         <NavBar />
-        <Container id="question-box">
+        <Container id="question-box" className="shadow">
           <Row>
             <Col className="text-center">{label}</Col>
           </Row>
           <Row>
-            <Col>{questionDisp}</Col>
+            <Col className="ml-4 mt-3 mb-3">{questionDisp}</Col>
           </Row>
           <Row>
             <Col>
-              <Form>
+              <Form className="ml-4">
                 <fieldset>
                   <Form.Group>
                     {answerDisplay}
@@ -90,14 +96,14 @@ class Question extends Component {
         <Container id="button-box">
           <Row>
             <Col className="text-left">
-              <Button onClick={() => this.prevQuestion()}>
-                <FaChevronCircleLeft />
+              <Button className="shadow" onClick={() => this.prevQuestion()}>
+                <h4><FaChevronCircleLeft /></h4>
               </Button>
             </Col>
             <Col m={8}></Col>
             <Col className="text-right">
-              <Button onClick={() => this.nextQuestion()}>
-                <FaChevronCircleRight />
+              <Button className="shadow" onClick={() => this.nextQuestion()}>
+                <h4><FaChevronCircleRight /></h4>
               </Button>
             </Col>
           </Row>
