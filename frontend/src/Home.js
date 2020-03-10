@@ -42,7 +42,7 @@ class Home extends Component{
                     </Row>
                     <Row>
                         <Col className="text-center" >
-                            <Button id="begin-button" type="submit">
+                            <Button id="begin-button" type="submit" href="/question">
                                 เริ่มทำแบบทดสอบ
                             </Button>
                         </Col>
