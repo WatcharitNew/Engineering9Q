@@ -9,7 +9,7 @@ class Question extends Component {
     super(props);
     this.state = {
       questionIdx: 0,
-      listAnswer: []
+      listAnswer: [0,0,0,0,0,0,0,0,0],
     };
   }
 
@@ -55,6 +55,13 @@ class Question extends Component {
         label={ans}
         name={questionList[this.state.questionIdx]}
         id={idx+1}
+        onChange={(e)=>{
+          let listAns = this.state.listAnswer;
+          listAns[this.state.questionIdx] = idx+1;
+          this.setState({listAnswer: listAns});
+          alert(this.state.listAnswer);
+        }}
+        checked={this.state.listAnswer[this.state.questionIdx] === idx+1}
       />
     ));
     var questionDisp = <h3>{questionList[this.state.questionIdx]}</h3>;
