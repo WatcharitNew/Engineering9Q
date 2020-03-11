@@ -1,13 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, Column, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class User {
-    @Column('varchar', { length: 100 })
-    userId: number;
+    @PrimaryColumn('varchar', { length: 100 })
+    userId: string;
 
     @Column('integer')
     score: number;
 
     @Column('varchar', { length: 100 })
     name: string;
+
+    @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+    createdTime: Date;
 }
