@@ -4,6 +4,7 @@ import "./Summary.css";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
 var utilities = require("./Utilities.json");
 
 class Summary extends Component {
@@ -12,20 +13,25 @@ class Summary extends Component {
     this.state = {
       score: LocalStorageService.getScore(),
       suggestion: "",
-      userID: LocalStorageService.getUserID()
+      userID: LocalStorageService.getUserID(),
+      redirectToHome: false,
+      finish: false
     };
   }
+
+  componentDidMount = () => {
+    console.log(this.state.userID);
+    if (this.state.userID === "") {
+      this.setState({ redirectToHome: true });
+    }
+  };
 
   getSummary = () => {
     var text = "";
     var score = this.state.score;
-    const label = "มีอาการของโรคซึมเศร้า";
+    const label = "นิสิตมีความเสี่ยงภาวะซึมเศร้า";
     if (score < 7) {
-      text = (
-        <h4>
-          ไม่{label} หรือ {label} ระดับน้อยมาก
-        </h4>
-      );
+      text = <h4>{label} ระดับน้อยมาก</h4>;
     } else if (score < 13) {
       text = <h4>{label} ระดับน้อย</h4>;
     } else if (score < 19) {
@@ -39,9 +45,8 @@ class Summary extends Component {
   getSuggestion = () => {
     return (
       <div>
-        <h2>ข้อเสนอแนะ</h2>
+        <h2 className="label-topic">ข้อเสนอแนะ</h2>
         <Form.Control
-          custom
           as="textarea"
           rows="3"
           onChange={e => {
@@ -71,6 +76,7 @@ class Summary extends Component {
             console.log("Status code is " + response.status);
         }
       });
+    this.setState({ finish: true });
   };
 
   submitBtn = () => {
@@ -92,12 +98,27 @@ class Summary extends Component {
   };
 
   label = () => {
-    return (
-      <h2 className="label-topic">สรุปผลคะแนน</h2>
-    );
-  }
+    return <h2 className="label-topic">สรุปผลคะแนน</h2>;
+  };
 
   render() {
+    /*if (this.state.redirectToHome) {
+      return <Redirect to="/" />;
+    }*/
+    if (this.state.finish) {
+      return (
+        <div className="main-bg">
+          <NavBar />
+          <Container>
+            <Row>
+              <Col className="text-center text-light mt-5">
+                <h1>ขอบคุณที่ร่วมทำแบบประเมิน</h1>
+              </Col>
+            </Row>
+          </Container>
+        </div>
+      );
+    }
     return (
       <div className="main-bg">
         <NavBar />

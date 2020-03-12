@@ -21,8 +21,16 @@ class Question extends Component {
       userName: LocalStorageService.getUserName(),
       major: LocalStorageService.getMajor(),
       answerHelp: "",
-      showHelpQuestion: false
+      showHelpQuestion: false,
+      redirectToHome: false,
     };
+  }
+
+  componentDidMount = () => {
+    console.log(this.state.userID);
+    if(this.state.userID === ""){
+      this.setState({redirectToHome: true});
+    }
   }
 
   nextQuestion = () => {
@@ -151,7 +159,6 @@ class Question extends Component {
     if (this.state.showHelpQuestion) {
       return (
         <Form.Control
-          custom
           as="textarea"
           rows="3"
           onChange={e => {
@@ -180,8 +187,11 @@ class Question extends Component {
   }
 
   render() {
+    if(this.state.redirectToHome) {
+      return <Redirect to="/" />;
+    }
     if (this.state.redirectToSummary) {
-      return <Redirect to="summary" />;
+      return <Redirect to="/summary" />;
     }
 
     return (

@@ -147,7 +147,7 @@ class Home extends Component {
         <Container id="home-box">
           <Row>
             <Col className="text-center">
-              <h1 className="text-white">แบบประเมิณ 9Q</h1>
+              <h1 className="text-white label-topic">แบบประเมิน 9Q</h1>
             </Col>
           </Row>
           {this.nameArea()}
