@@ -60,6 +60,7 @@ class Summary extends Component {
   };
 
   submit = () => {
+    this.setState({ finish: true });
     axios
       .patch(utilities["backend-url"] + "/users/" + this.state.userID, {
         comment: this.state.suggestion
@@ -76,7 +77,7 @@ class Summary extends Component {
             console.log("Status code is " + response.status);
         }
       });
-    this.setState({ finish: true });
+    LocalStorageService.checkOut();
   };
 
   submitBtn = () => {
@@ -85,7 +86,6 @@ class Summary extends Component {
         <Col className="text-center mt-3">
           <Button
             type="submit"
-            href="/"
             onClick={() => {
               this.submit();
             }}
@@ -102,9 +102,6 @@ class Summary extends Component {
   };
 
   render() {
-    /*if (this.state.redirectToHome) {
-      return <Redirect to="/" />;
-    }*/
     if (this.state.finish) {
       return (
         <div className="main-bg">
@@ -118,6 +115,9 @@ class Summary extends Component {
           </Container>
         </div>
       );
+    }
+    else if (this.state.redirectToHome) {
+      return <Redirect to="/" />;
     }
     return (
       <div className="main-bg">

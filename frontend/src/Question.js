@@ -44,11 +44,12 @@ class Question extends Component {
         Swal.fire({
           title: "ต้องการส่งคำตอบ?",
           icon: "warning",
-          showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "ใช่",
-          cancelButtonText: "ไม่"
+          cancelButtonText: "ไม่",
+          confirmButtonText: "ใช่",  
+          showCancelButton: true,
+          reverseButtons: true
         }).then(result => {
           if (result.value) {
             var score = 0;

@@ -3,6 +3,8 @@ import "./Home.css";
 import NavBar from "./NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
+import Swal from "sweetalert2";
+import { Redirect } from "react-router-dom";
 
 class Home extends Component {
   constructor(props) {
@@ -10,7 +12,8 @@ class Home extends Component {
     this.state = {
       name: "",
       id: "",
-      major: "cp"
+      major: "cp",
+      redirectToQuestion: false
     };
   }
 
@@ -19,9 +22,36 @@ class Home extends Component {
   };
 
   submit = () => {
-    LocalStorageService.setUserName(this.state.name);
-    LocalStorageService.setUserID(this.state.id);
-    LocalStorageService.setMajor(this.state.major);
+    if (this.idHandler(this.state.id) && this.nameHandler(this.state.name)) {
+      LocalStorageService.setUserName(this.state.name);
+      LocalStorageService.setUserID(this.state.id);
+      LocalStorageService.setMajor(this.state.major);
+      this.setState({ redirectToQuestion: true });
+    } else {
+      var text = "";
+      if (!this.nameHandler(this.state.name)) {
+        text += "ชื่อ-นามสกุล ";
+      }
+      if (!this.idHandler(this.state.id)) {
+        text += "รหัสนิสิต";
+      }
+      Swal.fire({
+        title: text,
+        text: "กรุณากรอกให้ถูกตามรูปแบบ",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "โอเค"
+      });
+    }
+  };
+
+  nameHandler = name => {
+    const regEx = /^[ก-์]*[ก-์]\s[ก-์]*[ก-์]$/;
+    return regEx.test(name);
+  };
+
+  idHandler = id => {
+    const regEx = /^[0-9]{8}21$/;
+    return regEx.test(id);
   };
 
   nameArea = () => {
@@ -63,7 +93,9 @@ class Home extends Component {
             placeholder="xxxxxxxx21"
             required
             onChange={e => {
-              this.setState({ id: e.target.value });
+              if (e.target.value.length <= 10) {
+                this.setState({ id: e.target.value });
+              }
             }}
             value={this.state.id}
           />
@@ -73,37 +105,37 @@ class Home extends Component {
     );
   };
 
-  getOption = () => {  
+  getOption = () => {
     return (
-        <Form.Control
-            as="select"
-            required
-            onChange={e => {
-              this.setState({ major: e.target.value });
-            }}
-            value={this.state.major}
-          >
-            <option value="cp">คอมพิวเตอร์</option>
-            <option value="chem">เคมี</option>
-            <option value="ne">นิวเคลียร์</option>
-            <option value="me">เครื่องกล</option>
-            <option value="ee">ไฟฟ้า</option>
-            <option value="ce">โยธา</option>
-            <option value="metal">โลหการ</option>
-            <option value="sv">สำรวจ</option>
-            <option value="env">สิ่งแวดล้อม</option>
-            <option value="mining">เหมืองแร่และปิโตรเลียม</option>
-            <option value="water">แหล่งน้ำ</option>
-            <option value="ie">อุตสาหการ</option>
-            <option value="bme">ชีวเวช</option>
-            <option value="adme">ADME</option>
-            <option value="aero">AERO</option>
-            <option value="ice">ICE</option>
-            <option value="nano">NANO</option>
-            <option value="robotic">ROBOTIC</option>
-        </Form.Control>
+      <Form.Control
+        as="select"
+        required
+        onChange={e => {
+          this.setState({ major: e.target.value });
+        }}
+        value={this.state.major}
+      >
+        <option value="cp">คอมพิวเตอร์</option>
+        <option value="chem">เคมี</option>
+        <option value="ne">นิวเคลียร์</option>
+        <option value="me">เครื่องกล</option>
+        <option value="ee">ไฟฟ้า</option>
+        <option value="ce">โยธา</option>
+        <option value="metal">โลหการ</option>
+        <option value="sv">สำรวจ</option>
+        <option value="env">สิ่งแวดล้อม</option>
+        <option value="mining">เหมืองแร่และปิโตรเลียม</option>
+        <option value="water">แหล่งน้ำ</option>
+        <option value="ie">อุตสาหการ</option>
+        <option value="bme">ชีวเวช</option>
+        <option value="adme">ADME</option>
+        <option value="aero">AERO</option>
+        <option value="ice">ICE</option>
+        <option value="nano">NANO</option>
+        <option value="robotic">ROBOTIC</option>
+      </Form.Control>
     );
-  }
+  };
 
   majorArea = () => {
     return (
@@ -118,7 +150,8 @@ class Home extends Component {
           {this.getOption()}
         </Col>
         <Col xs={2}></Col>
-      </Row>);
+      </Row>
+    );
   };
 
   submitBtn = () => {
@@ -128,7 +161,6 @@ class Home extends Component {
           <Button
             id="begin-button"
             type="submit"
-            href="/instruction"
             onClick={() => {
               this.submit();
             }}
@@ -141,6 +173,7 @@ class Home extends Component {
   };
 
   render() {
+    if (this.state.redirectToQuestion) return <Redirect to="/instruction" />;
     return (
       <div className="main-bg">
         <NavBar />
