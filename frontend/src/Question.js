@@ -2,22 +2,46 @@ import React, { Component } from "react";
 import "./Question.css";
 import NavBar from "./NavBar";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { FaChevronCircleLeft, FaChevronCircleRight, FaCircle } from "react-icons/fa";
+import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
+import LocalStorageService from "./LocalStorageService";
+import Swal from "sweetalert2";
+import { Redirect } from "react-router-dom";
 
 class Question extends Component {
   constructor(props) {
     super(props);
     this.state = {
       questionIdx: 0,
-      listAnswer: [0,0,0,0,0,0,0,0,0],
+      listAnswer: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       maxAnsQuest: 0,
+      redirectToSummary: false,
     };
   }
 
   nextQuestion = () => {
-    if(this.state.listAnswer[this.state.questionIdx] !== 0){
-      if(this.state.questionIdx < 8){
-        this.setState({questionIdx: this.state.questionIdx + 1});
+    if (this.state.listAnswer[this.state.questionIdx] !== 0) {
+      if (this.state.questionIdx < 8) {
+        this.setState({ questionIdx: this.state.questionIdx + 1 });
+      } else {
+        Swal.fire({
+          title: "ต้องการส่งคำตอบ?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "ใช่",
+          cancelButtonText: "ไม่"
+        }).then(result => {
+          if (result.value) {
+            var score = 0;
+            for(let i=0; i<this.state.listAnswer.length; i++){
+              score += this.state.listAnswer[i]-1;
+            }
+            LocalStorageService.setScore(score);
+            Swal.fire("ส่งคำตอบแล้ว");
+            this.setState({redirectToSummary: true});
+          }
+        });
       }
     } else {
       alert("โปรดเลือกคำตอบก่อนไปข้อถัดไป");
@@ -25,12 +49,15 @@ class Question extends Component {
   };
 
   prevQuestion = () => {
-    if(this.state.questionIdx > 0){
-      this.setState({questionIdx: this.state.questionIdx - 1});
+    if (this.state.questionIdx > 0) {
+      this.setState({ questionIdx: this.state.questionIdx - 1 });
     }
   };
 
   render() {
+    if(this.state.redirectToSummary){
+      return <Redirect to="summary"/>
+    }
     const label = (
       <h2>
         ในช่วง 2 สัปดาห์ที่ผ่านมา รวมทั้งวันนี้ ท่านมีอาการเหล่านี้บ่อยแค่ไหน
@@ -54,22 +81,26 @@ class Question extends Component {
       <h4>เป็นทุกวัน</h4>
     ];
     var answerDisplay = answerList.map((ans, idx) => (
-      <Form.Check key={idx}
+      <Form.Check
+        key={idx}
         custom
         type="radio"
         label={ans}
         name={questionList[this.state.questionIdx]}
-        id={idx+1}
-        onChange={(e)=>{
+        id={idx + 1}
+        onChange={e => {
           let listAns = this.state.listAnswer;
-          listAns[this.state.questionIdx] = idx+1;
-          this.setState({listAnswer: listAns});
+          listAns[this.state.questionIdx] = idx + 1;
+          this.setState({ listAnswer: listAns });
         }}
-        checked={this.state.listAnswer[this.state.questionIdx] === idx+1}
+        checked={this.state.listAnswer[this.state.questionIdx] === idx + 1}
       />
     ));
-    var questionDisp = <h4>ข้อ {this.state.questionIdx+1} {questionList[this.state.questionIdx]}</h4>;
-    //var progressCircle = this.state.listAnswer.filter((ans)=>{ans !== 0});
+    var questionDisp = (
+      <h4>
+        ข้อ {this.state.questionIdx + 1} {questionList[this.state.questionIdx]}
+      </h4>
+    );
 
     return (
       <div className="main-bg">
@@ -85,9 +116,7 @@ class Question extends Component {
             <Col>
               <Form className="ml-4">
                 <fieldset>
-                  <Form.Group>
-                    {answerDisplay}
-                  </Form.Group>
+                  <Form.Group>{answerDisplay}</Form.Group>
                 </fieldset>
               </Form>
             </Col>
@@ -97,13 +126,17 @@ class Question extends Component {
           <Row>
             <Col className="text-left">
               <Button className="shadow" onClick={() => this.prevQuestion()}>
-                <h4><FaChevronCircleLeft /></h4>
+                <h4>
+                  <FaChevronCircleLeft />
+                </h4>
               </Button>
             </Col>
             <Col m={8}></Col>
             <Col className="text-right">
               <Button className="shadow" onClick={() => this.nextQuestion()}>
-                <h4><FaChevronCircleRight /></h4>
+                <h4>
+                  <FaChevronCircleRight />
+                </h4>
               </Button>
             </Col>
           </Row>

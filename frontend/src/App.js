@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import Home from './Home';
 import Question from './Question';
+import Summary from './Summary';
 
 class App extends Component {
   constructor(props){
@@ -17,6 +18,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={()=><Home />} />
           <Route path="/question" component={()=><Question />} />
+          <Route path="/summary" component={()=><Summary />} />
         </Switch>
     </Router>
     );
