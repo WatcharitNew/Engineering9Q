@@ -38,31 +38,39 @@ const LocalStorageService = (function () {
     function _clearUserID() {
         localStorage.removeItem('userID');
     }
-/*
-    function _setUserMode(mode) {
-        localStorage.setItem('userMode', mode);
+
+    function _setMajor(major) {
+        localStorage.setItem('major', major);
     }
-    function _getUserMode() {
-        return localStorage.getItem('userMode') || '';
+    function _getMajor() {
+        return localStorage.getItem('major') || '';
     }
-    function _clearUserMode() {
-        localStorage.removeItem('userMode');
+    function _clearMajor() {
+        localStorage.removeItem('major');
     }
-*/
+
+    function _checkOut() {
+        _clearUserName();
+        _clearUserID();
+        _clearScore();
+        _clearMajor();
+    }
+
     return {
         getService: _getService,
         setUserID: _setUserID,
         getUserID: _getUserID,
         clearUserID: _clearUserID,
-       /* setUserMode: _setUserMode,
-        getUserMode: _getUserMode,
-        clearUserMode: _clearUserMode,*/
         setUserName: _setUserName,
         getUserName: _getUserName,
         clearUserName: _clearUserName,
         setScore: _setScore,
         getScore: _getScore,
         clearScore: _clearScore,
+        setMajor: _setMajor,
+        getMajor: _getMajor,
+        clearMajor: _clearMajor,
+        checkOut: _checkOut
     }
 })();
 export default LocalStorageService;

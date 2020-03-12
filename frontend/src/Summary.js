@@ -1,53 +1,131 @@
-import React,{Component} from 'react';
-import NavBar from './NavBar';
-import './Summary.css';
-import { Container, Row, Col } from 'react-bootstrap';
-import LocalStorageService from './LocalStorageService';
+import React, { Component } from "react";
+import NavBar from "./NavBar";
+import "./Summary.css";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import LocalStorageService from "./LocalStorageService";
+import axios from "axios";
+var utilities = require("./Utilities.json");
 
-class Summary extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-            score:LocalStorageService.getScore(),
-        };
+class Summary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      score: LocalStorageService.getScore(),
+      suggestion: "",
+      userID: LocalStorageService.getUserID()
+    };
+  }
+
+  getSummary = () => {
+    var text = "";
+    var score = this.state.score;
+    const label = "มีอาการของโรคซึมเศร้า";
+    if (score < 7) {
+      text = (
+        <h4>
+          ไม่{label} หรือ {label} ระดับน้อยมาก
+        </h4>
+      );
+    } else if (score < 13) {
+      text = <h4>{label} ระดับน้อย</h4>;
+    } else if (score < 19) {
+      text = <h4>{label} ระดับปานกลาง</h4>;
+    } else {
+      text = <h4>{label} ระดับรุนแรง</h4>;
     }
+    return text;
+  };
 
-    getSummary = () => {
-        var text = "";
-        var score = this.state.score;
-        const label = "มีอาการของโรคซึมเศร้า";
-        if(score < 7){
-            text = <h4>ไม่{label} หรือ {label} ระดับน้อยมาก</h4>;
-        } else if(score < 13){
-            text = <h4>{label} ระดับน้อย</h4>;
-        } else if(score < 19){
-            text = <h4>{label} ระดับปานกลาง</h4>;
-        } else {
-            text = <h4>{label} ระดับรุนแรง</h4>;
+  getSuggestion = () => {
+    return (
+      <div>
+        <h2>ข้อเสนอแนะ</h2>
+        <Form.Control
+          custom
+          as="textarea"
+          rows="3"
+          onChange={e => {
+            this.setState({ suggestion: e.target.value });
+          }}
+          className="shadow"
+          value={this.state.suggestion}
+        />
+      </div>
+    );
+  };
+
+  submit = () => {
+    axios
+      .patch(utilities["backend-url"] + "/users/" + this.state.userID, {
+        comment: this.state.suggestion
+      })
+      .then(response => {
+        switch (response.status) {
+          // Created
+          case 201:
+            console.log("already push");
+            break;
+
+          // Other case
+          default:
+            console.log("Status code is " + response.status);
         }
-        return text;        
-    }
+      });
+  };
 
-    render(){
-        var label = <h2>สรุปผลคะแนน</h2>;
-        return(
-            <div className="main-bg">
-                <NavBar />
-                <Container id="summary-box">
-                    <Row>
-                        <Col className="text-center">
-                            {label}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="text-center mt-3">
-                            {this.getSummary()}
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-        );
-    }
+  submitBtn = () => {
+    return (
+      <Row>
+        <Col className="text-center mt-3">
+          <Button
+            type="submit"
+            href="/"
+            onClick={() => {
+              this.submit();
+            }}
+          >
+            ส่งคำตอบ
+          </Button>
+        </Col>
+      </Row>
+    );
+  };
+
+  label = () => {
+    return (
+      <h2 className="label-topic">สรุปผลคะแนน</h2>
+    );
+  }
+
+  render() {
+    return (
+      <div className="main-bg">
+        <NavBar />
+        <Container id="summary-box">
+          <Row>
+            <Col className="text-center">{this.label()}</Col>
+          </Row>
+          <Row>
+            <Col className="text-center mt-3">{this.getSummary()}</Col>
+          </Row>
+        </Container>
+        <Container>
+          <Row>
+            <Col xs={3}></Col>
+            <Col
+              xs={6}
+              className="text-center mt-3 text-white"
+              id="suggestion-box"
+            >
+              {this.getSuggestion()}
+            </Col>
+            <Col xs={4}></Col>
+          </Row>
+          {this.submitBtn()}
+        </Container>
+      </div>
+    );
+  }
 }
-  
+
 export default Summary;

@@ -3,7 +3,6 @@ html, body, .main-bg {
     background-color: #710000;
     width: 100vw;
     height: 100vh;
-    position: fixed;
     font-family: 'Kanit', sans-serif;
 }
 #home-box {
