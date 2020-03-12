@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './users.dto';
 
@@ -19,6 +19,11 @@ export class UsersController {
     @Post()
     async createNewUser(@Body() createUserDto: CreateUserDto) {
         return this.userService.createNewUser(createUserDto);
+    }
+
+    @Patch(':userId')
+    async addComment(@Param('userId') userId,@Body() comment : {comment : string} ) {
+        return this.userService.addComment(userId,comment.comment);
     }
 
 }

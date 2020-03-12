@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
+import { User, Major } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './users.dto';
 
@@ -21,6 +21,16 @@ export class UsersService {
 
     async createNewUser(createUserDto:CreateUserDto) {
         createUserDto.createdTime = new Date();
+        createUserDto.sumScore = 0;
+        createUserDto.scores.forEach( score => createUserDto.sumScore += score);
         return this.userRepository.insert(createUserDto);
+    }
+
+    async addComment(userId:string, comment:string) {
+        let editDto = {
+            userId : userId,
+            comment : comment
+        };
+        return this.userRepository.save(editDto);
     }
 }
