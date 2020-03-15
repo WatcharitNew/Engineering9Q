@@ -15,18 +15,13 @@ import { Major } from 'src/entities/user.entity';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @Get()
+  @Get('')
   async getUserByFilter(
     @Query('major') major: Major,
     @Query('year') year: string,
   ) {
     console.log(major, year);
     return this.userService.getUserByFilter(major, year);
-  }
-
-  @Get()
-  async getAllUsers() {
-    return this.userService.getAllUsers();
   }
 
   @Get(':userId')

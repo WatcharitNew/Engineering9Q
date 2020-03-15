@@ -35,10 +35,8 @@ export class UsersService {
   }
 
   async getUserByFilter(major: Major, year: string): Promise<User[]> {
-    console.log(major);
     if (!year) year = '';
     if (!major) {
-      console.log('${year}');
       return this.userRepository.find({
         where: {
           userId: Like(`${year}%`),
