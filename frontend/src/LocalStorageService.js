@@ -49,11 +49,33 @@ const LocalStorageService = (function () {
         localStorage.removeItem('major');
     }
 
+    function _setMode(mode) {
+        localStorage.setItem('mode', mode);
+    }
+    function _getMode() {
+        return localStorage.getItem('mode') || '';
+    }
+    function _clearMode() {
+        localStorage.removeItem('mode');
+    }
+
+    function _setFilter(filter) {
+        localStorage.setItem('filter', filter);
+    }
+    function _getFilter() {
+        return localStorage.getItem('filter') || '';
+    }
+    function _clearFilter() {
+        localStorage.removeItem('filter');
+    }
+
     function _checkOut() {
         _clearUserName();
         _clearUserID();
         _clearScore();
         _clearMajor();
+        _clearMode();
+        _clearFilter();
     }
 
     return {
@@ -70,6 +92,12 @@ const LocalStorageService = (function () {
         setMajor: _setMajor,
         getMajor: _getMajor,
         clearMajor: _clearMajor,
+        setMode: _setMode,
+        getMode: _getMode,
+        clearMode: _clearMode,
+        setFilter: _setFilter,
+        getFilter: _getFilter,
+        clearFilter: _clearFilter,
         checkOut: _checkOut
     }
 })();

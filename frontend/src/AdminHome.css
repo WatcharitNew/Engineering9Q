@@ -1,0 +1,10 @@
+.loading {
+    margin-top: 40vh;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+}
+.chart {
+    border-radius: 20px;
+}

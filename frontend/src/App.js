@@ -4,6 +4,7 @@ import Home from './Home';
 import Question from './Question';
 import Summary from './Summary';
 import Instruction from './Instruction';
+import AdminHome from './AdminHome';
 
 
 class App extends Component {
@@ -22,6 +23,7 @@ class App extends Component {
           <Route path="/instruction" component={()=><Instruction />} />
           <Route path="/question" component={()=><Question />} />
           <Route path="/summary" component={()=><Summary />} />
+          <Route path="/admin/home" component={()=><AdminHome />} />
         </Switch>
     </Router>
     );
