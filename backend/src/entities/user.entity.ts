@@ -42,9 +42,17 @@ export class User {
   @Column('varchar', { length: 100 })
   major: Major;
 
-  @Column('text')
-  help: string;
+  //10'th question
+  @Column('text', { nullable: true })
+  helpStudy: string;
 
+  @Column('text', { nullable: true })
+  helpHealth: string;
+
+  @Column('text', { nullable: true })
+  helpOther: string;
+
+  //comment (after submit 10 question)
   @Column('text', { nullable: true })
   comment: string;
 }

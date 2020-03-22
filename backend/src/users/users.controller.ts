@@ -20,7 +20,6 @@ export class UsersController {
     @Query('major') major: Major,
     @Query('year') year: string,
   ) {
-    console.log(major, year);
     return this.userService.getUserByFilter(major, year);
   }
 
@@ -31,6 +30,7 @@ export class UsersController {
 
   @Post()
   async createNewUser(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return this.userService.createNewUser(createUserDto);
   }
 

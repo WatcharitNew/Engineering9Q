@@ -23,6 +23,13 @@ export class UsersService {
     createUserDto.createdTime = new Date();
     createUserDto.sumScore = 0;
     createUserDto.scores.forEach(score => (createUserDto.sumScore += score));
+
+    if(!createUserDto.helpStudy) createUserDto.helpStudy = "";
+    if(!createUserDto.helpHealth) createUserDto.helpHealth = "";
+    if(!createUserDto.helpOther) createUserDto.helpOther = "";
+
+    if(!createUserDto.comment) createUserDto.comment = "";
+
     return this.userRepository.insert(createUserDto);
   }
 
