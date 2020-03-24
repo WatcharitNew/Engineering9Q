@@ -8,6 +8,7 @@ export class CreateUserDto {
   scores: number[];
   helpStudy?: string;
   helpHealth?: string;
+  helpFamily?: string;
   helpOther?: string;
   createdTime?: Date;
   comment?: string;

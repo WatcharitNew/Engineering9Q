@@ -26,6 +26,7 @@ export class UsersService {
 
     if(!createUserDto.helpStudy) createUserDto.helpStudy = "";
     if(!createUserDto.helpHealth) createUserDto.helpHealth = "";
+    if(!createUserDto.helpFamily) createUserDto.helpFamily = "";
     if(!createUserDto.helpOther) createUserDto.helpOther = "";
 
     if(!createUserDto.comment) createUserDto.comment = "";

@@ -49,6 +49,9 @@ export class User {
   @Column('text', { nullable: true })
   helpHealth: string;
 
+  @Column('text',{ nullable: true})
+  helpFamily: string;
+
   @Column('text', { nullable: true })
   helpOther: string;
 
