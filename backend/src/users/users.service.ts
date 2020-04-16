@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User, Major } from 'src/entities/user.entity';
 import { Repository, Like } from 'typeorm';
-import { CreateUserDto } from './users.dto';
+import { CreateUserDto, EditUserDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -24,22 +24,11 @@ export class UsersService {
     createUserDto.sumScore = 0;
     createUserDto.scores.forEach(score => (createUserDto.sumScore += score));
 
-    if(!createUserDto.helpStudy) createUserDto.helpStudy = "";
-    if(!createUserDto.helpHealth) createUserDto.helpHealth = "";
-    if(!createUserDto.helpFamily) createUserDto.helpFamily = "";
-    if(!createUserDto.helpOther) createUserDto.helpOther = "";
-
-    if(!createUserDto.comment) createUserDto.comment = "";
-
     return this.userRepository.insert(createUserDto);
   }
 
-  async addComment(userId: string, comment: string) {
-    let editDto = {
-      userId: userId,
-      comment: comment,
-    };
-    return this.userRepository.save(editDto);
+  async addComment(editUserDto: EditUserDto) {
+    return this.userRepository.save(editUserDto);
   }
 
   async getUserByFilter(major: Major, year: string): Promise<User[]> {

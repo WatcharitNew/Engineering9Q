@@ -6,10 +6,12 @@ export class CreateUserDto {
   name: string;
   major: Major;
   scores: number[];
+  createdTime?: Date;
+}
+
+export class EditUserDto {
+  userId?: string;
   helpStudy?: string;
   helpHealth?: string;
-  helpFamily?: string;
   helpOther?: string;
-  createdTime?: Date;
-  comment?: string;
 }

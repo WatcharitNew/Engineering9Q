@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './users.dto';
+import { CreateUserDto, EditUserDto } from './users.dto';
 import { Major } from 'src/entities/user.entity';
 
 @Controller('users')
@@ -30,15 +30,15 @@ export class UsersController {
 
   @Post()
   async createNewUser(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
     return this.userService.createNewUser(createUserDto);
   }
 
   @Patch(':userId')
   async addComment(
     @Param('userId') userId,
-    @Body() comment: { comment: string },
+    @Body() editUserDto: EditUserDto,
   ) {
-    return this.userService.addComment(userId, comment.comment);
+    editUserDto.userId = userId;
+    return this.userService.addComment(editUserDto);
   }
 }

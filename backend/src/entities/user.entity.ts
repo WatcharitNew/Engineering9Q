@@ -49,13 +49,6 @@ export class User {
   @Column('text', { nullable: true })
   helpHealth: string;
 
-  @Column('text',{ nullable: true})
-  helpFamily: string;
-
   @Column('text', { nullable: true })
   helpOther: string;
-
-  //comment (after submit 10 question)
-  @Column('text', { nullable: true })
-  comment: string;
 }
