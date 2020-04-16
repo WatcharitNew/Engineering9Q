@@ -34,10 +34,7 @@ export class UsersController {
   }
 
   @Patch(':userId')
-  async addComment(
-    @Param('userId') userId,
-    @Body() editUserDto: EditUserDto,
-  ) {
+  async addComment(@Param('userId') userId, @Body() editUserDto: EditUserDto) {
     editUserDto.userId = userId;
     return this.userService.addComment(editUserDto);
   }
