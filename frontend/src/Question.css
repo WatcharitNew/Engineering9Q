@@ -9,5 +9,8 @@
     margin-top: 10vh;
 }
 .label-topic {
-    text-shadow: 5px 5px 25px #000000;
+    text-shadow: 5px 5px 20px #000000;
+}
+.question-topic {
+    text-shadow: 2px 2px 10px #ac5c5c;
 }

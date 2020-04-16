@@ -20,26 +20,21 @@ class Question extends Component {
       userID: LocalStorageService.getUserID(),
       userName: LocalStorageService.getUserName(),
       major: LocalStorageService.getMajor(),
-      answerHelp: "",
-      showHelpQuestion: false,
       redirectToHome: false,
     };
   }
 
   componentDidMount = () => {
     console.log(this.state.userID);
-    if(this.state.userID === ""){
-      this.setState({redirectToHome: true});
+    if (this.state.userID === "") {
+      this.setState({ redirectToHome: true });
     }
-  }
+  };
 
   nextQuestion = () => {
     if (this.state.listAnswer[this.state.questionIdx] !== 0) {
       if (this.state.questionIdx < 8) {
         this.setState({ questionIdx: this.state.questionIdx + 1 });
-      } else if (this.state.questionIdx === 8) {
-        this.setState({ questionIdx: this.state.questionIdx + 1 });
-        this.setState({ showHelpQuestion: true });
       } else {
         Swal.fire({
           title: "ต้องการส่งคำตอบ?",
@@ -47,7 +42,7 @@ class Question extends Component {
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
           cancelButtonText: "ไม่",
-          confirmButtonText: "ใช่",  
+          confirmButtonText: "ใช่",
           showCancelButton: true,
           reverseButtons: true
         }).then(result => {
@@ -66,8 +61,7 @@ class Question extends Component {
                 userId: this.state.userID,
                 name: this.state.userName,
                 major: this.state.major,
-                help: this.state.answerHelp,
-                scores: listScore
+                scores: listScore,
               })
               .then(response => {
                 switch (response.status) {
@@ -87,7 +81,8 @@ class Question extends Component {
       }
     } else {
       Swal.fire({
-        title: "โปรดเลือกคำตอบก่อนไปข้อถัดไป",
+        text: "โปรดเลือกคำตอบก่อนไปข้อถัดไป",
+        icon: "warning",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "โอเค"
       });
@@ -97,7 +92,6 @@ class Question extends Component {
   prevQuestion = () => {
     if (this.state.questionIdx > 0) {
       this.setState({ questionIdx: this.state.questionIdx - 1 });
-      this.setState({ showHelpQuestion: false });
     }
   };
 
@@ -132,8 +126,7 @@ class Question extends Component {
       "สมาธิไม่ดีเวลาทำอะไร เช่น ดูโทรทัศน์ ฟังวิทยุ หรือทำงานที่ต้องใช้ความตั้งใจ",
       "เหนื่อยง่าย หรือ ไม่ค่อยมีแรง",
       "พูดช้า ทำอะไรช้าลง จนคนอื่นสังเกตเห็นได้ หรือกระสับกระส่ายไม่สามารถอยู่นิ่งได้เหมือนที่เคยเป็น",
-      "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี",
-      "นิสิตอยากให้ทางคณะช่วยเหลือด้านไหนบ้าง"
+      "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี"
     ];
     return (
       <h4>
@@ -144,11 +137,11 @@ class Question extends Component {
 
   label = () => {
     return (
-      <h2 className="label-topic">
-        ในช่วง 2 สัปดาห์ที่ผ่านมา รวมทั้งวันนี้ ท่านมีอาการเหล่านี้บ่อยแค่ไหน
+      <h2 className="question-topic">
+        ในช่วง 1 เดือนที่ผ่านมา รวมทั้งวันนี้ ท่านมีอาการเหล่านี้บ่อยแค่ไหน
       </h2>
     );
-  }
+  };
 
   answerDisp = () => {
     const answerList = [
@@ -157,19 +150,7 @@ class Question extends Component {
       <h4>เป็นบ่อย >7 วัน</h4>,
       <h4>เป็นทุกวัน</h4>
     ];
-    if (this.state.showHelpQuestion) {
-      return (
-        <Form.Control
-          as="textarea"
-          rows="3"
-          onChange={e => {
-            this.setState({ answerHelp: e.target.value });
-          }}
-          className="shadow"
-        />
-      );
-    } else {
-      return (answerList.map((ans, idx) => (
+    return answerList.map((ans, idx) => (
         <Form.Check
           key={idx}
           custom
@@ -183,12 +164,11 @@ class Question extends Component {
           }}
           checked={this.state.listAnswer[this.state.questionIdx] === idx + 1}
         />
-      )));
-    } 
-  }
+      ));
+  };
 
   render() {
-    if(this.state.redirectToHome) {
+    if (this.state.redirectToHome) {
       return <Redirect to="/" />;
     }
     if (this.state.redirectToSummary) {
