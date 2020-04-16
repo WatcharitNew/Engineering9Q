@@ -21,12 +21,12 @@ class Home extends Component {
     LocalStorageService.checkOut();
   };
 
-  submit = () => {
+  submit = () => {/*
     LocalStorageService.setUserName("test");
     LocalStorageService.setUserID("6031000021");
     LocalStorageService.setMajor("CP");
-    this.setState({ redirectToQuestion: true });
-    /*if (this.idHandler(this.state.id) && this.nameHandler(this.state.name)) {
+    this.setState({ redirectToQuestion: true });*/
+    if (this.idHandler(this.state.id) && this.nameHandler(this.state.name)) {
       LocalStorageService.setUserName(this.state.name);
       LocalStorageService.setUserID(this.state.id);
       LocalStorageService.setMajor(this.state.major);
@@ -45,7 +45,7 @@ class Home extends Component {
         confirmButtonColor: "#3085d6",
         confirmButtonText: "ตกลง",
       });
-    }*/
+    }
   };
 
   nameHandler = name => {
