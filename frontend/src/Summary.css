@@ -12,4 +12,8 @@
 }
 #summary-tel-box {
     margin-top: 3vh;
+    margin-bottom: 8vh;
+}
+.head-curve {
+    border-radius: 10px 10px 0px 0px;
 }

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Question.css";
-import NavBar from "./NavBar";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import LocalStorageService from "./LocalStorageService";
@@ -21,6 +20,7 @@ class Question extends Component {
       userName: LocalStorageService.getUserName(),
       major: LocalStorageService.getMajor(),
       redirectToHome: false,
+      fade: false,
     };
   }
 
@@ -129,16 +129,18 @@ class Question extends Component {
       "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี"
     ];
     return (
-      <h4>
-        ข้อ {this.state.questionIdx + 1} {questionList[this.state.questionIdx]}
+      <h4 className={this.state.fade?"question-fade":""}>
+        <b>
+          ข้อ {this.state.questionIdx + 1} {questionList[this.state.questionIdx]}
+        </b>
       </h4>
     );
   };
 
   label = () => {
     return (
-      <h2 className="question-topic">
-        ในช่วง 1 เดือนที่ผ่านมา รวมทั้งวันนี้ ท่านมีอาการเหล่านี้บ่อยแค่ไหน
+      <h2 className="background-orange text-light pt-3 pb-3">
+        ในช่วง 2 สัปดาห์ที่ผ่านมา รวมทั้งวันนี้ ท่านมีอาการเหล่านี้บ่อยแค่ไหน
       </h2>
     );
   };
@@ -152,6 +154,7 @@ class Question extends Component {
     ];
     return answerList.map((ans, idx) => (
         <Form.Check
+          className={this.state.fade?"question-fade":""}
           key={idx}
           custom
           type="radio"
@@ -160,7 +163,12 @@ class Question extends Component {
           onChange={e => {
             let listAns = this.state.listAnswer;
             listAns[this.state.questionIdx] = idx + 1;
-            this.setState({ listAnswer: listAns });
+            var fade = this.state.questionIdx<8?true:false;
+            this.setState({ listAnswer: listAns, fade: fade });
+            setTimeout(() => { //Start the timer
+              this.nextQuestion();
+              this.setState({fade: false});
+            }, 500)
           }}
           checked={this.state.listAnswer[this.state.questionIdx] === idx + 1}
         />
@@ -177,7 +185,6 @@ class Question extends Component {
 
     return (
       <div className="main-bg">
-        <NavBar />
         <Container id="question-box" className="shadow">
           <Row>
             <Col className="text-center">{this.label()}</Col>

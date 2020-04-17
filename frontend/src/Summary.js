@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import NavBar from "./NavBar";
 import "./Summary.css";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
@@ -18,7 +17,8 @@ class Summary extends Component {
       finish: false,
       showDetail: [false, false, false],
       helpDetail: ["", "", ""],
-      answerHelp: "",
+      stressDetail: "",
+      requestHelp: 1,
     };
   }
 
@@ -52,10 +52,6 @@ class Summary extends Component {
           <Form.Control
             as="textarea"
             rows="1"
-            onChange={(e) => {
-              this.setState({ answerHelp: e.target.value });
-            }}
-            className="shadow"
             placeholder="อธิบายเพิ่มเติม"
             onChange={(e) => {
               var helpDetail = this.state.helpDetail;
@@ -70,28 +66,21 @@ class Summary extends Component {
     return;
   };
 
-  questionDisp = () => {
-    return (
-      <h4>
-        นิสิตอยากให้ทางคณะช่วยเหลือด้านไหนบ้าง สามารถเสนอแนะได้ตามหัวข้อด้านล่าง
-      </h4>
-    );
-  };
-
-  answerDisp = () => {
+  helpAnswerDisp = () => {
     const helpList = [
-      <h4>ด้านการเรียน</h4>,
-      <h4>ด้านสุขภาพ</h4>,
-      <h4>อื่นๆ</h4>,
+      <h5>ด้านการเรียน</h5>,
+      <h5>ด้านสุขภาพ</h5>,
+      <h5>อื่นๆ</h5>,
     ];
     return helpList.map((help, idx) => (
-      <Row className="mb-3" key={idx+1}>
+      <Row className="mb-3" key={idx + 1}>
         <Col xs={3}>
           <Form.Check
             custom
             type="checkbox"
             label={help}
             id={idx + 1}
+            className="mt-1 mb-1"
             onClick={(e) => {
               var showDetail = this.state.showDetail;
               showDetail[idx] = !showDetail[idx];
@@ -141,7 +130,7 @@ class Summary extends Component {
               // Created
               case 201:
                 console.log("already push");
-                
+
                 break;
 
               // Other case
@@ -149,16 +138,148 @@ class Summary extends Component {
                 console.log("Status code is " + response.status);
             }
           });
-          this.setState({finish: true});
+        this.setState({ finish: true });
       }
     });
+  };
+
+  questionDisp = (quest) => {
+    return <h4>{quest}</h4>;
+  };
+
+  stressAnswerDisp = () => {
+    return (
+      <Form.Control
+        as="textarea"
+        rows="2"
+        onChange={(e) => {
+          this.setState({ stressDetail: e.target.value });
+        }}
+        placeholder=""
+        value={this.state.stressDetail}
+        placeholder="อธิบายเพิ่มเติม"
+      />
+    );
+  };
+
+  requestHelpDisp = () => {
+        const requestList = [
+          <h5>ต้องการ</h5>,
+          <h5>ไม่ต้องการ</h5>,
+        ];
+        return requestList.map((request, idx) => (
+          <Row className="mb-3" key={idx + 1}>
+            <Col xs={3}>
+              <Form.Check
+                custom
+                type="radio"
+                label={request}
+                id={idx + 5}
+                onClick={(e) => {
+                  this.setState({ requestHelp: idx });
+                }}
+                checked={this.state.requestHelp === idx}
+              />
+            </Col>
+          </Row>
+        ));
+      };
+
+  helpQuestion = () => {
+    return (
+      <Container id="summary-help-box">
+        <Row>
+          <Col className="text-center pt-3 pb-1 mb-2 background-orange text-light head-curve">
+            {this.questionDisp(
+              "นิสิตอยากให้ทางคณะช่วยเหลือด้านไหนบ้าง สามารถเสนอแนะได้ตามหัวข้อด้านล่าง"
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="ml-5 mr-5 mb-3">
+            <Form className="ml-4">
+              <fieldset>
+                <Form.Group>{this.helpAnswerDisp()}</Form.Group>
+              </fieldset>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="text-center pt-3 pb-1 mb-3 background-orange text-light">
+            {this.questionDisp("ขอให้นิสิตอธิบายความกังวลหรือความเครียดสั้นๆ")}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="ml-5 mr-5 mb-5">
+            {this.stressAnswerDisp()}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="text-center pt-3 pb-1 mb-2 background-orange text-light">
+            {this.questionDisp("หากฝ่ายกิจการนิสิต จะจัดให้มีนักจิตแพทย์มาให้คำปรึกษานิสิตผ่านออนไลน์ นิสิตมีความต้องการหรือไม่")}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="ml-5 mr-5 mb-3">
+            <Form className="ml-4">
+              <fieldset>
+                <Form.Group>{this.requestHelpDisp()}</Form.Group>
+              </fieldset>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="text-center">
+            <Button
+              id="begin-button"
+              onClick={() => {
+                this.submit();
+              }}
+            >
+              ส่งคำตอบ
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+    );
+  };
+
+  contactDisp = () => {
+    return (
+      <Container id="summary-tel-box">
+        <Row>
+          <Col className="text-center">
+            <h4>เบอร์สายด่วน 02 218 0540</h4>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="text-center">
+            <a href="https://wellness.chula.ac.th/">
+              <h4>wellness.chula.ac.th</h4>
+            </a>
+          </Col>
+        </Row>
+      </Container>
+    );
+  };
+
+  showResult = () => {
+    return (
+      <Container id="summary-box">
+        <Row>
+          <Col className="text-center background-orange text-light head-curve">{this.label()}</Col>
+        </Row>
+        <Row>
+          <Col className="text-center mt-3">{this.getSummary()}</Col>
+        </Row>
+      </Container>
+    );
   };
 
   render() {
     if (this.state.finish) {
       return (
         <div className="main-bg">
-          <NavBar />
           <Container>
             <Row>
               <Col className="text-center text-light mt-5">
@@ -176,47 +297,9 @@ class Summary extends Component {
     }
     return (
       <div className="main-bg">
-        <NavBar />
-        <Container id="summary-box">
-          <Row>
-            <Col className="text-center">{this.label()}</Col>
-          </Row>
-          <Row>
-            <Col className="text-center mt-3">{this.getSummary()}</Col>
-          </Row>
-        </Container>
-        <Container id="summary-help-box">
-            <Row>
-              <Col className="text-center ml-4 mt-3 mb-3">{this.questionDisp()}</Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form className="ml-4">
-                  <fieldset>
-                    <Form.Group>{this.answerDisp()}</Form.Group>
-                  </fieldset>
-                  <div className="text-center">
-                  <Button
-                    id="begin-button"
-                    onClick={() => {
-                      this.submit();
-                    }}
-                  >
-                    ส่งคำตอบ
-                  </Button>
-                  </div>
-                </Form>
-              </Col>
-            </Row>
-        </Container>
-        <Container id="summary-tel-box">
-          <Row>
-            <Col className="text-center"><h4>เบอร์สายด่วน 02 218 0540</h4></Col>
-          </Row>
-          <Row>
-            <Col className="text-center"><a href="https://wellness.chula.ac.th/"><h4>wellness.chula.ac.th</h4></a></Col>
-          </Row>
-        </Container>
+        {this.showResult()}
+        {this.helpQuestion()}
+        {this.contactDisp()}
       </div>
     );
   }

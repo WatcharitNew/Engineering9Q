@@ -20,7 +20,7 @@ class Instruction extends Component {
         </li>
         <li>
           <h5>
-            คำถามต่อไปนี้จะถามถึงประสบการณ์ของท่านในช่วง 1 เดือนที่ผ่านมาจนถึงปัจจุบัน
+            คำถามต่อไปนี้จะถามถึงประสบการณ์ของท่านในช่วง 2 สัปดาห์ที่ผ่านมาจนถึงปัจจุบัน
             ให้ท่านสำรวจตัวท่านเองและประเมินเหตุการณ์
             อาการหรือความคิดเห็นและความรู้สึกของท่านว่าอยู่ในระดับใด
             แล้วตอบลงในช่องคำตอบที่เป็นจริงกับตัวท่านมากที่สุด </h5> <br />
@@ -35,11 +35,17 @@ class Instruction extends Component {
   render() {
     return (
       <div className="main-bg">
-        <NavBar />
+        <Container>
+          <Row>
+            <Col className="text-center text-light mt-5">
+              <h1>แบบประเมิน 9Q</h1>
+            </Col>
+          </Row>
+        </Container>
         <Container id="instruction-box">
           <Row>
             <Col className="text-center mt-3">
-              <h1>คำชี้แจง</h1>
+              <h3>คำชี้แจง</h3>
             </Col>
           </Row>
           <Row className="instruction-area mt-3 mb-3">
