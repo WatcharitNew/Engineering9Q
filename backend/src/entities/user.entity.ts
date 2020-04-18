@@ -24,7 +24,7 @@ export enum Major {
 
 @Entity()
 export class User {
-  @PrimaryColumn('varchar', { length: 100 })
+  @PrimaryColumn('varchar', { length: 10 })
   userId: string;
 
   @Column('integer')
@@ -51,4 +51,10 @@ export class User {
 
   @Column('text', { nullable: true })
   helpOther: string;
+
+  @Column('text', {nullable : true})
+  worryText: string;
+
+  @Column('boolean')
+  isWantPsychologist: boolean;
 }
