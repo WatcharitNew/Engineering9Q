@@ -292,9 +292,9 @@ class Summary extends Component {
           </Container>
         </div>
       );
-    } else if (this.state.redirectToHome) {
+    } /*else if (this.state.redirectToHome) {
       return <Redirect to="/" />;
-    }
+    }*/
     return (
       <div className="main-bg">
         {this.showResult()}
