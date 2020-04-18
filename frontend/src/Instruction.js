@@ -37,14 +37,14 @@ class Instruction extends Component {
         <Container>
           <Row>
             <Col className="text-center text-light mt-5">
-              <h1>แบบประเมิน 9Q</h1>
+              <h1 className="label-topic">แบบประเมิน 9Q</h1>
             </Col>
           </Row>
         </Container>
         <Container id="instruction-box">
           <Row>
             <Col className="text-center mt-3">
-              <h3>คำชี้แจง</h3>
+              <h3 className="pt-2 pb-2 background-orange text-light label-curve">คำชี้แจง</h3>
             </Col>
           </Row>
           <Row className="instruction-area mt-3 mb-3">

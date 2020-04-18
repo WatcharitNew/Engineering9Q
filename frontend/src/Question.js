@@ -139,7 +139,7 @@ class Question extends Component {
 
   label = () => {
     return (
-      <h2 className="background-orange text-light pt-3 pb-3">
+      <h2 className="background-orange text-light pt-3 pb-3 label-curve label-topic">
         ในช่วง 2 สัปดาห์ที่ผ่านมา รวมทั้งวันนี้ ท่านมีอาการเหล่านี้บ่อยแค่ไหน
       </h2>
     );
@@ -168,7 +168,7 @@ class Question extends Component {
             setTimeout(() => { //Start the timer
               this.nextQuestion();
               this.setState({fade: false});
-            }, 500)
+            }, 800)
           }}
           checked={this.state.listAnswer[this.state.questionIdx] === idx + 1}
         />

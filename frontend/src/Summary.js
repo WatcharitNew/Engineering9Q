@@ -95,7 +95,7 @@ class Summary extends Component {
   };
 
   label = () => {
-    return <h2 className="label-topic">สรุปผลคะแนน</h2>;
+    return <h2 className="label-topic background-orange text-light label-curve pt-2 pb-2">สรุปผลคะแนน</h2>;
   };
 
   submit = () => {
@@ -144,7 +144,7 @@ class Summary extends Component {
   };
 
   questionDisp = (quest) => {
-    return <h4>{quest}</h4>;
+    return <h4 className="background-orange text-light label-curve pt-3 pb-3">{quest}</h4>;
   };
 
   stressAnswerDisp = () => {
@@ -189,14 +189,14 @@ class Summary extends Component {
     return (
       <Container id="summary-help-box">
         <Row>
-          <Col className="text-center pt-3 pb-1 mb-2 background-orange text-light head-curve">
+          <Col className="text-center">
             {this.questionDisp(
               "นิสิตอยากให้ทางคณะช่วยเหลือด้านไหนบ้าง สามารถเสนอแนะได้ตามหัวข้อด้านล่าง"
             )}
           </Col>
         </Row>
         <Row>
-          <Col className="ml-5 mr-5 mb-3">
+          <Col className="ml-5 mr-5 mt-1 mb-1">
             <Form className="ml-4">
               <fieldset>
                 <Form.Group>{this.helpAnswerDisp()}</Form.Group>
@@ -205,22 +205,22 @@ class Summary extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="text-center pt-3 pb-1 mb-3 background-orange text-light">
+          <Col className="text-center">
             {this.questionDisp("ขอให้นิสิตอธิบายความกังวลหรือความเครียดสั้นๆ")}
           </Col>
         </Row>
         <Row>
-          <Col className="ml-5 mr-5 mb-5">
+          <Col className="ml-5 mr-5 mt-2 mb-4">
             {this.stressAnswerDisp()}
           </Col>
         </Row>
         <Row>
-          <Col className="text-center pt-3 pb-1 mb-2 background-orange text-light">
+          <Col className="text-center mt-1 mb-1">
             {this.questionDisp("หากฝ่ายกิจการนิสิต จะจัดให้มีนักจิตแพทย์มาให้คำปรึกษานิสิตผ่านออนไลน์ นิสิตมีความต้องการหรือไม่")}
           </Col>
         </Row>
         <Row>
-          <Col className="ml-5 mr-5 mb-3">
+          <Col className="ml-5 mr-5 mt-2 mb-3">
             <Form className="ml-4">
               <fieldset>
                 <Form.Group>{this.requestHelpDisp()}</Form.Group>
@@ -231,7 +231,9 @@ class Summary extends Component {
         <Row>
           <Col className="text-center">
             <Button
-              id="begin-button"
+              size="lg"
+              variant="primary"
+              className="text-light"
               onClick={() => {
                 this.submit();
               }}
@@ -267,7 +269,7 @@ class Summary extends Component {
     return (
       <Container id="summary-box">
         <Row>
-          <Col className="text-center background-orange text-light head-curve">{this.label()}</Col>
+          <Col className="text-center">{this.label()}</Col>
         </Row>
         <Row>
           <Col className="text-center mt-3">{this.getSummary()}</Col>
