@@ -30,7 +30,28 @@ class AdminHome extends Component {
         onestar: [],
         twostar: [],
         threestar: []
-      }
+      },
+      major: {
+        cp: "คอมพิวเตอร์",
+        chem: "เคมี",
+        ne: "นิวเคลียร์",
+        me: "เครื่องกล",
+        ee: "ไฟฟ้า",
+        ce: "โยธา",
+        metal: "โลหการ",
+        sv: "สำรวจ",
+        env: "สิ่งแวดล้อม",
+        mining: "เหมืองแร่และปิโตรเลียม",
+        water: "แหล่งน้ำ",
+        ie: "อุตสาหการ",
+        bme: "ชีวเวช",
+        adme: "ADME",
+        aero: "AERO",
+        ice: "ICE",
+        nano: "NANO",
+        robotic: "ROBOTIC",
+      },
+      comment: [],
     };
   }
 
@@ -39,6 +60,7 @@ class AdminHome extends Component {
       const userDatas = res.data;
       var datasets = this.state.datasets;
       var dataCategory = this.state.dataCategory;
+      var comment = this.state.comment;
       for (let i = 0; i < userDatas.length; i++) {
         var total = userDatas[i].sumScore;
         if (total < 13) {
@@ -48,6 +70,9 @@ class AdminHome extends Component {
         } else {
           dataCategory.threestar.push(i);
         }
+        if(userDatas[i].comment !== ""){
+          comment.push(userDatas[i].comment);
+        }
       }
       datasets[0].data[0] = dataCategory.onestar.length;
       datasets[0].data[1] = dataCategory.twostar.length;
@@ -56,6 +81,8 @@ class AdminHome extends Component {
       console.log(this.state.datasets[0].data);
       this.setState({ dataCategory: dataCategory });
       console.log(this.state.dataCategory);
+      this.setState({ comment: comment });
+      console.log(this.state.comment);
       this.setState({ userDatas: userDatas, isUserDataLoad: true });
       console.log(this.state.userDatas);
     });
@@ -126,7 +153,16 @@ class AdminHome extends Component {
             <h5>คะแนน</h5>
           </td>
           <td className="align-middle">
-            <h5>ความช่วยเหลือ</h5>
+            <h5>ด้านการเรียน</h5>
+          </td>
+          <td className="align-middle">
+            <h5>ด้านสุขภาพ</h5>
+          </td>
+          <td className="align-middle">
+            <h5>ด้านครอบครัว</h5>
+          </td>
+          <td className="align-middle">
+            <h5>ด้านอื่นๆ</h5>
           </td>
         </tr>
       </thead>
@@ -145,15 +181,27 @@ class AdminHome extends Component {
         padding: 30
       }
     };
+    var commentDisp = this.state.comment.map((com,idx)=>(
+    <li><h5 key={idx}>{com}</h5></li>
+    ));
     return (
       <Col className="text-center bg-white chart">
+        <div className="mt-3">
         <Pie
           data={{
             labels: this.state.labels,
             datasets: this.state.datasets
           }}
+          
           options={{ legend: options }}
         />
+        </div>
+        <h2 className="mt-5 text-left">ข้อเสนอแนะ</h2>
+        <div className="mb-3 text-left">
+          <ul>
+            {commentDisp}
+          </ul>
+        </div>
       </Col>
     );
   };
@@ -176,12 +224,15 @@ class AdminHome extends Component {
       default: idxList=this.state.dataCategory.onestar;
     }
     const data = idxList.map(id => (
-      <tr className="text-center">
+      <tr className="text-left">
         <td className="align-middle">{this.state.userDatas[id].name}</td>
         <td className="align-middle">{this.state.userDatas[id].userId}</td>
-        <td className="align-middle">{this.state.userDatas[id].major}</td>
-        <td className="align-middle">{this.state.userDatas[id].sumScore}</td>
-        <td className="align-middle">{this.state.userDatas[id].help}</td>
+        <td className="align-middle text-center">{this.state.major[this.state.userDatas[id].major]}</td>
+        <td className="align-middle text-center">{this.state.userDatas[id].sumScore}</td>
+        <td className="align-middle">{this.state.userDatas[id].helpStudy}</td>
+        <td className="align-middle">{this.state.userDatas[id].helpHealth}</td>
+        <td className="align-middle">{this.state.userDatas[id].helpFamily}</td>
+        <td className="align-middle">{this.state.userDatas[id].helpOther}</td>
       </tr>
     ));
 

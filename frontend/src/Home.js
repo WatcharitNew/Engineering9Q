@@ -21,31 +21,35 @@ class Home extends Component {
     LocalStorageService.checkOut();
   };
 
-  submit = () => {
+  submit = () => {/*
+    LocalStorageService.setUserName("test");
+    LocalStorageService.setUserID("6031000021");
+    LocalStorageService.setMajor("CP");
+    this.setState({ redirectToQuestion: true });*/
     if (this.idHandler(this.state.id) && this.nameHandler(this.state.name)) {
       LocalStorageService.setUserName(this.state.name);
       LocalStorageService.setUserID(this.state.id);
       LocalStorageService.setMajor(this.state.major);
       this.setState({ redirectToQuestion: true });
     } else {
-      var text = "";
+      var text = [];
       if (!this.nameHandler(this.state.name)) {
-        text += "ชื่อ-นามสกุล ";
+        text.push("กรุณาใส่ ชื่อ-นามสกุล เป็นภาษาไทยเท่านั้น");
       }
       if (!this.idHandler(this.state.id)) {
-        text += "รหัสนิสิต";
+        text.push("กรุณาใส่ รหัสนิสิต เป็นตัวเลข10หลักเท่านั้น และลงท้ายด้วย 21");
       }
       Swal.fire({
-        title: text,
-        text: "กรุณากรอกให้ถูกตามรูปแบบ",
+        html: text,
+        icon: 'error',
         confirmButtonColor: "#3085d6",
-        confirmButtonText: "โอเค"
+        confirmButtonText: "ตกลง",
       });
     }
   };
 
   nameHandler = name => {
-    const regEx = /^[ก-์]*[ก-์]\s[ก-์]*[ก-์]$/;
+    const regEx = /^[ก-์]*[ก-์][\s[ก-์]*[ก-์]]*$/;
     return regEx.test(name);
   };
 
@@ -60,10 +64,11 @@ class Home extends Component {
         <Col xs={2}></Col>
         <Col xs={3} className="text-right">
           <Form.Label>
-            <h4 className="text-white">ชื่อ-นามสกุล</h4>
+            <h4 className="text-white label-topic">ชื่อ-นามสกุล</h4>
+            <p className="text-white">ภาษาไทยเท่านั้น</p>
           </Form.Label>
         </Col>
-        <Col xs={5} className="text-left">
+        <Col xs={3} className="text-left">
           <Form.Control
             type="text"
             placeholder="ชื่อ นามสกุล"
@@ -72,8 +77,10 @@ class Home extends Component {
               this.setState({ name: e.target.value });
             }}
             value={this.state.name}
+            className="shadow"
           />
         </Col>
+        <Col xs={2}></Col>
       </Row>
     );
   };
@@ -84,7 +91,7 @@ class Home extends Component {
         <Col xs={2}></Col>
         <Col xs={3} className="text-right">
           <Form.Label>
-            <h4 className="text-white">รหัสนิสิต</h4>
+            <h4 className="text-white label-topic">รหัสนิสิต</h4>
           </Form.Label>
         </Col>
         <Col xs={3} className="text-left">
@@ -98,6 +105,7 @@ class Home extends Component {
               }
             }}
             value={this.state.id}
+            className="shadow"
           />
         </Col>
         <Col xs={2}></Col>
@@ -143,7 +151,7 @@ class Home extends Component {
         <Col xs={2}></Col>
         <Col xs={3} className="text-right">
           <Form.Label>
-            <h4 className="text-white">ภาควิชา</h4>
+            <h4 className="text-white label-topic">ภาควิชา</h4>
           </Form.Label>
         </Col>
         <Col xs={3} className="text-left">

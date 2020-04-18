@@ -1,7 +1,15 @@
 #instruction-box {
-    margin-top: 10vh;
+    margin-top: 5vh;
     background-color: white;
     color: black;
     border-radius: 30px;
     padding: 10px 10px 10px 10px;
+    
+}
+.instruction-area {
+    bottom: 0;
+    align-items: center;
+}
+.instruction-btn {
+    bottom: 0;
 }
