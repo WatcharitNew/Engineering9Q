@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Instruction.css";
-import NavBar from "./NavBar";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
 class Instruction extends Component {

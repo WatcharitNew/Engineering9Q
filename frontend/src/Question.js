@@ -175,10 +175,10 @@ class Question extends Component {
       ));
   };
 
-  render() {
+  render() {/*
     if (this.state.redirectToHome) {
       return <Redirect to="/" />;
-    }
+    }*/
     if (this.state.redirectToSummary) {
       return <Redirect to="/summary" />;
     }

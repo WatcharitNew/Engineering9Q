@@ -19,7 +19,7 @@ class App extends Component {
         <NavBar />
         <Router>
           <Switch>
-            <Route path="/instruction" component={() => <Instruction />} />
+            <Route exact path="/" component={() => <Instruction />} />
             <Route path="/question" component={() => <Question />} />
             <Route path="/summary" component={() => <Summary />} />
             <Route path="/admin/home" component={() => <AdminHome />} />
