@@ -1,11 +1,22 @@
 import React, { Component } from "react";
 import "./Instruction.css";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import axios from 'axios';
 
 class Instruction extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount = () => {
+      try {
+        const test = axios.get('index.php?key=$favcolor').data
+        console.log("fav color " + test);
+      } catch (error) {
+        return undefined
+      }
+    
   }
 
   instructionArea = () => {
