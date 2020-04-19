@@ -1,11 +1,22 @@
 import React, { Component } from "react";
 import "./Instruction.css";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import axios from 'axios';
 
 class Instruction extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentDidMount = () => {
+      try {
+        const test = axios.get('index.php?key=$favcolor').data
+        console.log("fav color " + test);
+      } catch (error) {
+        return undefined
+      }
+    
   }
 
   instructionArea = () => {
@@ -43,7 +54,7 @@ class Instruction extends Component {
         </Container>
         <Container id="instruction-box">
           <Row>
-            <Col className="text-center mt-3">
+            <Col className="text-center">
               <h3 className="pt-2 pb-2 background-orange text-light label-curve">คำชี้แจง</h3>
             </Col>
           </Row>
@@ -52,7 +63,7 @@ class Instruction extends Component {
           </Row>
           <Row className="instruction-btn mb-3">
             <Col className="text-center ">
-              <Button type="submit" href="/question">
+              <Button size="lg" type="submit" href="/question">
                 ยอมรับ
               </Button>
             </Col>

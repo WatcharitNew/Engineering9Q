@@ -18,7 +18,7 @@ class Summary extends Component {
       showDetail: [false, false, false],
       helpDetail: ["", "", ""],
       stressDetail: "",
-      requestHelp: 1,
+      requestHelp: -1,
     };
   }
 
@@ -95,56 +95,73 @@ class Summary extends Component {
   };
 
   label = () => {
-    return <h2 className="label-topic background-orange text-light label-curve pt-2 pb-2">สรุปผลคะแนน</h2>;
+    return (
+      <h2 className="label-topic background-orange text-light label-curve pt-2 pb-2">
+        สรุปผลคะแนน
+      </h2>
+    );
   };
 
   submit = () => {
-    Swal.fire({
-      title: "ต้องการส่งคำตอบ?",
-      icon: "warning",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "ไม่",
-      confirmButtonText: "ใช่",
-      showCancelButton: true,
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.value) {
-        var helpStudy = this.state.showDetail[0]
-          ? this.state.helpDetail[0]
-          : "";
-        var helpHealth = this.state.showDetail[1]
-          ? this.state.helpDetail[1]
-          : "";
-        var helpOther = this.state.showDetail[2]
-          ? this.state.helpDetail[2]
-          : "";
-        axios
-          .patch(utilities["backend-url"] + "/users/" + this.state.userID, {
-            helpStudy: helpStudy,
-            helpHealth: helpHealth,
-            helpOther: helpOther,
-          })
-          .then((response) => {
-            switch (response.status) {
-              // Created
-              case 201:
-                console.log("already push");
+    if (this.state.requestHelp == -1) {
+      Swal.fire({
+        text: "โปรดเลือกความต้องการด้วย",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "โอเค",
+      });
+    } else {
+      Swal.fire({
+        title: "ต้องการส่งคำตอบ?",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "ไม่",
+        confirmButtonText: "ใช่",
+        showCancelButton: true,
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.value) {
+          var helpStudy = this.state.showDetail[0]
+            ? this.state.helpDetail[0]
+            : "";
+          var helpHealth = this.state.showDetail[1]
+            ? this.state.helpDetail[1]
+            : "";
+          var helpOther = this.state.showDetail[2]
+            ? this.state.helpDetail[2]
+            : "";
+          axios
+            .patch(utilities["backend-url"] + "/users/" + this.state.userID, {
+              helpStudy: helpStudy,
+              helpHealth: helpHealth,
+              helpOther: helpOther,
+            })
+            .then((response) => {
+              switch (response.status) {
+                // Created
+                case 201:
+                  console.log("already push");
 
-                break;
+                  break;
 
-              // Other case
-              default:
-                console.log("Status code is " + response.status);
-            }
-          });
-        this.setState({ finish: true });
-      }
-    });
+                // Other case
+                default:
+                  console.log("Status code is " + response.status);
+              }
+            });
+          this.setState({ finish: true });
+        }
+      });
+    }
   };
 
   questionDisp = (quest) => {
-    return <h4 className="background-orange text-light label-curve pt-3 pb-3">{quest}</h4>;
+    return (
+      <h4 className="background-orange text-light label-curve pt-3 pb-3">
+        {quest}
+      </h4>
+    );
   };
 
   stressAnswerDisp = () => {
@@ -163,27 +180,24 @@ class Summary extends Component {
   };
 
   requestHelpDisp = () => {
-        const requestList = [
-          <h5>ต้องการ</h5>,
-          <h5>ไม่ต้องการ</h5>,
-        ];
-        return requestList.map((request, idx) => (
-          <Row className="mb-3" key={idx + 1}>
-            <Col xs={3}>
-              <Form.Check
-                custom
-                type="radio"
-                label={request}
-                id={idx + 5}
-                onClick={(e) => {
-                  this.setState({ requestHelp: idx });
-                }}
-                checked={this.state.requestHelp === idx}
-              />
-            </Col>
-          </Row>
-        ));
-      };
+    const requestList = [<h5>ต้องการ</h5>, <h5>ไม่ต้องการ</h5>];
+    return requestList.map((request, idx) => (
+      <Row className="mb-3" key={idx + 1}>
+        <Col xs={3}>
+          <Form.Check
+            custom
+            type="radio"
+            label={request}
+            id={idx + 5}
+            onClick={(e) => {
+              this.setState({ requestHelp: idx });
+            }}
+            checked={this.state.requestHelp === idx}
+          />
+        </Col>
+      </Row>
+    ));
+  };
 
   helpQuestion = () => {
     return (
@@ -210,17 +224,17 @@ class Summary extends Component {
           </Col>
         </Row>
         <Row>
-          <Col className="ml-5 mr-5 mt-2 mb-4">
-            {this.stressAnswerDisp()}
-          </Col>
+          <Col className="ml-5 mr-5 mt-2 mb-4">{this.stressAnswerDisp()}</Col>
         </Row>
         <Row>
           <Col className="text-center mt-1 mb-1">
-            {this.questionDisp("หากฝ่ายกิจการนิสิต จะจัดให้มีนักจิตแพทย์มาให้คำปรึกษานิสิตผ่านออนไลน์ นิสิตมีความต้องการหรือไม่")}
+            {this.questionDisp(
+              "หากฝ่ายกิจการนิสิต จะจัดให้มีนักจิตแพทย์มาให้คำปรึกษานิสิตผ่านออนไลน์ นิสิตมีความต้องการหรือไม่"
+            )}
           </Col>
         </Row>
         <Row>
-          <Col className="ml-5 mr-5 mt-2 mb-3">
+          <Col className="ml-5 mr-5 mt-2">
             <Form className="ml-4">
               <fieldset>
                 <Form.Group>{this.requestHelpDisp()}</Form.Group>
@@ -287,7 +301,7 @@ class Summary extends Component {
               <Col className="text-center text-light mt-5">
                 <div className="finish-text">
                   <h3>ขอบคุณที่ร่วมทำแบบประเมิน</h3>
-                  <h3>แหล่งอ้างอิง:กรมสุขภาพจิต กระทรวงสาธารณสุข</h3>
+                  <h3>แหล่งอ้างอิง : กรมสุขภาพจิต กระทรวงสาธารณสุข</h3>
                 </div>
               </Col>
             </Row>
