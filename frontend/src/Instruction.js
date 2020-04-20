@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./Instruction.css";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
+var Qs = require('qs');
 
 class Instruction extends Component {
   constructor(props) {
