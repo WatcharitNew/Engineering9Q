@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Instruction.css";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import axios from 'axios';
+import axios from "axios";
 
 class Instruction extends Component {
   constructor(props) {
@@ -10,14 +10,20 @@ class Instruction extends Component {
   }
 
   componentDidMount = () => {
-      try {
-        const test = axios.get('index.php?key=$favcolor').data
-        console.log("fav color " + test);
-      } catch (error) {
-        return undefined
-      }
-    
-  }
+    const requestBody = {
+      q: "getSession",
+    };
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    };
+
+    axios.post("index.php", Qs.stringify(requestBody), config).then((result) => {
+      console.log(result.data)
+    });
+  };
 
   instructionArea = () => {
     return (
@@ -30,13 +36,18 @@ class Instruction extends Component {
         </li>
         <li>
           <h5>
-            คำถามต่อไปนี้จะถามถึงประสบการณ์ของท่านในช่วง 2 สัปดาห์ที่ผ่านมาจนถึงปัจจุบัน
+            คำถามต่อไปนี้จะถามถึงประสบการณ์ของท่านในช่วง 2
+            สัปดาห์ที่ผ่านมาจนถึงปัจจุบัน
             ให้ท่านสำรวจตัวท่านเองและประเมินเหตุการณ์
             อาการหรือความคิดเห็นและความรู้สึกของท่านว่าอยู่ในระดับใด
-            แล้วตอบลงในช่องคำตอบที่เป็นจริงกับตัวท่านมากที่สุด </h5> <br />
-            <div className="text-center instruction-last">
-              <h4>การตอบแบบสอบถามในครั้งนี้จะเป็นประโยชน์อย่างยิ่งในการใช้เป็นแนวทางเพื่อช่วยพัฒนาระบบการดูแลนิสิตของคณะวิศวกรรมศาสตร์ต่อไป</h4>
-            </div>
+            แล้วตอบลงในช่องคำตอบที่เป็นจริงกับตัวท่านมากที่สุด{" "}
+          </h5>{" "}
+          <br />
+          <div className="text-center instruction-last">
+            <h4>
+              การตอบแบบสอบถามในครั้งนี้จะเป็นประโยชน์อย่างยิ่งในการใช้เป็นแนวทางเพื่อช่วยพัฒนาระบบการดูแลนิสิตของคณะวิศวกรรมศาสตร์ต่อไป
+            </h4>
+          </div>
         </li>
       </ul>
     );
@@ -55,7 +66,9 @@ class Instruction extends Component {
         <Container id="instruction-box">
           <Row>
             <Col className="text-center">
-              <h3 className="pt-2 pb-2 background-orange text-light label-curve">คำชี้แจง</h3>
+              <h3 className="pt-2 pb-2 background-orange text-light label-curve">
+                คำชี้แจง
+              </h3>
             </Col>
           </Row>
           <Row className="instruction-area mt-3 mb-3">
