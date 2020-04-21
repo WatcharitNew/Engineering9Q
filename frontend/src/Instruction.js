@@ -12,7 +12,7 @@ class Instruction extends Component {
 
   componentDidMount = () => {
     const requestBody = {
-      q: "getSession",
+      q: "get",
     };
 
     const config = {
@@ -21,7 +21,7 @@ class Instruction extends Component {
       },
     };
 
-    axios.post("index.php", Qs.stringify(requestBody), config).then((result) => {
+    axios.post("http://localhost:80/test.php", Qs.stringify(requestBody), config).then((result) => {
       console.log(result.data)
     });
   };
