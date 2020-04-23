@@ -1,5 +1,5 @@
-// LocalStorageService.js
-const LocalStorageService = (function () {
+// sessionStorageService.js
+const SessionStorageService = (function () {
     var _service;
     function _getService() {
         if (!_service) {
@@ -10,63 +10,63 @@ const LocalStorageService = (function () {
     }
 
     function _setUserName(userName) {
-        localStorage.setItem('userName', userName);
+        sessionStorage.setItem('userName', userName);
     }
     function _getUserName() {
-        return localStorage.getItem('userName') || '';
+        return sessionStorage.getItem('userName') || '';
     }
     function _clearUserName() {
-        localStorage.removeItem('userName');
+        sessionStorage.removeItem('userName');
     }
 
     function _setScore(score) {
-        localStorage.setItem('score', score);
+        sessionStorage.setItem('score', score);
     }
     function _getScore() {
-        return localStorage.getItem('score') || '';
+        return sessionStorage.getItem('score') || '';
     }
     function _clearScore() {
-        localStorage.removeItem('score');
+        sessionStorage.removeItem('score');
     }
 
     function _setUserID(userID) {
-        localStorage.setItem('userID', userID);
+        sessionStorage.setItem('userID', userID);
     }
     function _getUserID() {
-        return localStorage.getItem('userID') || '';
+        return sessionStorage.getItem('userID') || '';
     }
     function _clearUserID() {
-        localStorage.removeItem('userID');
+        sessionStorage.removeItem('userID');
     }
 
     function _setMajor(major) {
-        localStorage.setItem('major', major);
+        sessionStorage.setItem('major', major);
     }
     function _getMajor() {
-        return localStorage.getItem('major') || '';
+        return sessionStorage.getItem('major') || '';
     }
     function _clearMajor() {
-        localStorage.removeItem('major');
+        sessionStorage.removeItem('major');
     }
 
     function _setMode(mode) {
-        localStorage.setItem('mode', mode);
+        sessionStorage.setItem('mode', mode);
     }
     function _getMode() {
-        return localStorage.getItem('mode') || '';
+        return sessionStorage.getItem('mode') || '';
     }
     function _clearMode() {
-        localStorage.removeItem('mode');
+        sessionStorage.removeItem('mode');
     }
 
     function _setFilter(filter) {
-        localStorage.setItem('filter', filter);
+        sessionStorage.setItem('filter', filter);
     }
     function _getFilter() {
-        return localStorage.getItem('filter') || '';
+        return sessionStorage.getItem('filter') || '';
     }
     function _clearFilter() {
-        localStorage.removeItem('filter');
+        sessionStorage.removeItem('filter');
     }
 
     function _checkOut() {
@@ -101,4 +101,4 @@ const LocalStorageService = (function () {
         checkOut: _checkOut
     }
 })();
-export default LocalStorageService;
+export default SessionStorageService;

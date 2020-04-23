@@ -1,0 +1,275 @@
+import React, { Component } from "react";
+import { Container, Row, Col, Spinner, Table, Button } from "react-bootstrap";
+import axios from "axios";
+import "./AdminStudent.css";
+import SessionStorageService from "../SessionStorageService";
+import { FaChevronCircleLeft } from "react-icons/fa";
+var utilities = require("../Utilities.json");
+var Qs = require("qs");
+
+class AdminStudent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userData: "",
+      isUserDataLoad: false,
+      major: {
+        cp: "คอมพิวเตอร์",
+        chem: "เคมี",
+        ne: "นิวเคลียร์",
+        me: "เครื่องกล",
+        ee: "ไฟฟ้า",
+        ce: "โยธา",
+        metal: "โลหการ",
+        sv: "สำรวจ",
+        env: "สิ่งแวดล้อม",
+        mining: "เหมืองแร่และปิโตรเลียม",
+        water: "แหล่งน้ำ",
+        ie: "อุตสาหการ",
+        bme: "ชีวเวช",
+        adme: "ADME",
+        aero: "AERO",
+        ice: "ICE",
+        nano: "NANO",
+        robotic: "ROBOTIC",
+      },
+    };
+  }
+
+  fetchData = () => {
+    const requestBody = {
+      q: "getUserByUserId",
+      userId: SessionStorageService.getUserID(),
+    };
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    };
+    axios
+      .post(
+        utilities["backend-url"] + "/api.php",
+        Qs.stringify(requestBody),
+        config
+      )
+      .then((response) => {
+        switch (response.status) {
+          // Created
+          case 200:
+            console.log("already push");
+            console.log(response.data[0]);
+            const userData = response.data[0];
+            userData.help = [
+              response.data[0].helpStudy,
+              response.data[0].helpHealth,
+              response.data[0].helpStudy.helpOther,
+            ];
+            this.setState({ userData: userData, isUserDataLoad: true });
+            break;
+
+          // Other case
+          default:
+            console.log("Status code is " + response.status);
+        }
+      });
+  };
+
+  componentDidMount = () => {
+    this.fetchData();
+  };
+
+  headScoreData = () => {
+    return (
+      <thead className="bg-dark text-light">
+        <tr>
+          <td className="text-center">
+            <h5>คำถาม</h5>
+          </td>
+          <td className="text-center">
+            <h5>คะแนนที่ได้</h5>
+          </td>
+        </tr>
+      </thead>
+    );
+  };
+
+  showScoreData = () => {
+    const questionList = [
+      "เบื่อ ไม่สนใจอยากทำอะไร",
+      "ไม่สบายใจ ซึมเศร้า ท้อแท้",
+      "หลับยาก หรือหลับๆ ตื่นๆ หรือหลับมากไป",
+      "เบื่ออาหาร หรือ กินมากเกินไป",
+      "รู้สึกไม่ดีกับตัวเอง คิดว่าตัวเองล้มเหลวหรือทำให้ตนเองหรือครอบครัวผิดหวัง",
+      "สมาธิไม่ดีเวลาทำอะไร เช่น ดูโทรทัศน์ ฟังวิทยุ หรือทำงานที่ต้องใช้ความตั้งใจ",
+      "เหนื่อยง่าย หรือ ไม่ค่อยมีแรง",
+      "พูดช้า ทำอะไรช้าลง จนคนอื่นสังเกตเห็นได้ หรือกระสับกระส่ายไม่สามารถอยู่นิ่งได้เหมือนที่เคยเป็น",
+      "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี",
+    ];
+    return questionList.map((quest, index) => (
+      <tr key={index}>
+        <td>
+          <h5>{quest}</h5>
+        </td>
+        <td className="text-center">
+          {this.state.userData.scores.substring(2 * index, 2 * index + 1)}
+        </td>
+      </tr>
+    ));
+  };
+
+  headHelpData = () => {
+    return (
+      <thead className="bg-dark text-light">
+        <tr>
+          <td className="text-center">
+            <h5>ต้องการความช่วยเหลือ</h5>
+          </td>
+          <td className="text-center">
+            <h5>รายละเอียด</h5>
+          </td>
+        </tr>
+      </thead>
+    );
+  };
+
+  showHelpData = () => {
+    const helpList = ["ด้านการเรียน", "ด้านครอบครัว", "อื่นๆ"];
+    return helpList.map((help, index) => (
+      <tr key={index}>
+        <td>
+          <h5>{help}</h5>
+        </td>
+        <td className="text-center">
+          <h5>{this.state.userData.help[index]}</h5>
+        </td>
+      </tr>
+    ));
+  };
+
+  scoreDisp = () => {
+    return (
+      <Row className="pl-3 pr-3 mt-4">
+        <Table responsive striped bordered hover size="sm">
+          {this.headScoreData()}
+          <tbody>{this.showScoreData()}</tbody>
+        </Table>
+      </Row>
+    );
+  };
+
+  helpDisp = () => {
+    return (
+      <Row className="pl-3 pr-3 mt-4">
+        <Table responsive responsive striped bordered hover size="sm">
+          {this.headHelpData()}
+          <tbody>{this.showHelpData()}</tbody>
+        </Table>
+      </Row>
+    );
+  };
+
+  backToHome = () => {
+    window.location.href = "/admin/home";
+  }
+
+  render() {
+    if (!this.state.isUserDataLoad) {
+      return (
+        <div className="main-bg text-center">
+          <Spinner
+            animation="grow"
+            variant="warning"
+            className="loading spinner"
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="main-bg">
+        <Button
+          className="shadow admin-backbtn"
+          onClick={() => this.backToHome()}
+        >
+          <h4>
+            <FaChevronCircleLeft />
+            Back
+          </h4>
+        </Button>
+        <Container id="admin-student">
+          <Row className="mt-3 pt-3 text-center">
+            <Col>
+              <h3 className="pt-2 pb-2 background-orange text-light label-curve ">
+                ผลการทำแบบทดสอบ
+              </h3>
+            </Col>
+          </Row>
+          <Row className="mt-3 pt-3 pl-5">
+            <Col>
+              <h3>
+                <b>ชื่อ</b> {this.state.userData.name}
+              </h3>
+            </Col>
+            <Col>
+              <h3>
+                <b>รหัสนิสิต</b> {this.state.userData.userId}
+              </h3>
+            </Col>
+          </Row>
+          <Row className="pl-5">
+            <Col>
+              <h3>
+                <b>ภาค</b> {this.state.major[this.state.userData.major]}
+              </h3>
+            </Col>
+            <Col>
+              <h3>
+                <b>คะแนนรวม</b> {this.state.userData.sumScore}
+              </h3>
+            </Col>
+          </Row>
+          {this.scoreDisp()}
+          {this.helpDisp()}
+          <Row className="pl-3 mt-4">
+            <Col>
+              <h4>
+                <b>อธิบายความกังวล</b>
+              </h4>
+            </Col>
+          </Row>
+          <Row className="pl-5 mt-3">
+            <Col>
+              <ul>
+                <li>
+                  <h5>{this.state.userData.worryText}</h5>
+                </li>
+              </ul>
+            </Col>
+          </Row>
+          <Row className="pl-3 mt-4 pb-3">
+            <Col lg={4} md={5} xs={6}>
+              <h4>
+                <b>ต้องการพบนักจิตแพทย์</b>
+              </h4>
+            </Col>
+            <Col>
+              <h4
+                className={
+                  this.state.userData.isWantPsychologist === 1
+                    ? "want"
+                    : "not-want"
+                }
+              >
+                {this.state.userData.isWantPsychologist === 1
+                  ? "ต้องการพบ"
+                  : "ไม่ต้องการพบ"}
+              </h4>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    );
+  }
+}
+
+export default AdminStudent;

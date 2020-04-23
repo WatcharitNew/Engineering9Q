@@ -8,3 +8,7 @@
 .chart {
     border-radius: 20px;
 }
+.link-to-detail:hover {
+    cursor: pointer;
+    background-color: #d3d3d3;
+}

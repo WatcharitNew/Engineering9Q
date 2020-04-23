@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import NavBar from "./NavBar";
 import { Container, Row, Col, Spinner, Nav, Table } from "react-bootstrap";
 import axios from "axios";
 import "./AdminHome.css";
 import { Pie } from "react-chartjs-2";
-var utilities = require("./Utilities.json");
+import SessionStorageService from "../SessionStorageService";
+var utilities = require("../Utilities.json");
+var Qs = require("qs");
 
 class AdminHome extends Component {
   constructor(props) {
@@ -16,20 +17,20 @@ class AdminHome extends Component {
       datasets: [
         {
           data: [0, 0, 0],
-          backgroundColor: ["#00af09", "#ffd000", "#b60000"]
-        }
+          backgroundColor: ["#00af09", "#ffd000", "#b60000"],
+        },
       ],
       filter: "graph",
       status: {
         GRAPH: "graph",
         ONESTAR: "onestar",
         TWOSTAR: "twostar",
-        THREESTAR: "threestar"
+        THREESTAR: "threestar",
       },
       dataCategory: {
         onestar: [],
         twostar: [],
-        threestar: []
+        threestar: [],
       },
       major: {
         cp: "คอมพิวเตอร์",
@@ -51,41 +52,60 @@ class AdminHome extends Component {
         nano: "NANO",
         robotic: "ROBOTIC",
       },
-      comment: [],
     };
   }
 
   fetchData = () => {
-    axios.get(utilities["backend-url"] + "/users").then(res => {
-      const userDatas = res.data;
-      var datasets = this.state.datasets;
-      var dataCategory = this.state.dataCategory;
-      var comment = this.state.comment;
-      for (let i = 0; i < userDatas.length; i++) {
-        var total = userDatas[i].sumScore;
-        if (total < 13) {
-          dataCategory.onestar.push(i);
-        } else if (total < 19) {
-          dataCategory.twostar.push(i);
-        } else {
-          dataCategory.threestar.push(i);
+    const requestBody = {
+      q: "getUserByFilter",
+    };
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    };
+    axios
+      .post(
+        utilities["backend-url"] + "/api.php",
+        Qs.stringify(requestBody),
+        config
+      )
+      .then((response) => {
+        switch (response.status) {
+          // Created
+          case 200:
+            console.log("already push");
+            console.log(response.data);
+            const userDatas = response.data;
+            var datasets = this.state.datasets;
+            var dataCategory = this.state.dataCategory;
+            for (let i = 0; i < userDatas.length; i++) {
+              var total = userDatas[i].sumScore;
+              if (total < 13) {
+                dataCategory.onestar.push(i);
+              } else if (total < 19) {
+                dataCategory.twostar.push(i);
+              } else {
+                dataCategory.threestar.push(i);
+              }
+            }
+            datasets[0].data[0] = dataCategory.onestar.length;
+            datasets[0].data[1] = dataCategory.twostar.length;
+            datasets[0].data[2] = dataCategory.threestar.length;
+            this.setState({ datasets: datasets });
+            console.log(this.state.datasets[0].data);
+            this.setState({ dataCategory: dataCategory });
+            console.log(this.state.dataCategory);
+            this.setState({ userDatas: userDatas, isUserDataLoad: true });
+            console.log(this.state.userDatas);
+            break;
+
+          // Other case
+          default:
+            console.log("Status code is " + response.status);
         }
-        if(userDatas[i].comment !== ""){
-          comment.push(userDatas[i].comment);
-        }
-      }
-      datasets[0].data[0] = dataCategory.onestar.length;
-      datasets[0].data[1] = dataCategory.twostar.length;
-      datasets[0].data[2] = dataCategory.threestar.length;
-      this.setState({ datasets: datasets });
-      console.log(this.state.datasets[0].data);
-      this.setState({ dataCategory: dataCategory });
-      console.log(this.state.dataCategory);
-      this.setState({ comment: comment });
-      console.log(this.state.comment);
-      this.setState({ userDatas: userDatas, isUserDataLoad: true });
-      console.log(this.state.userDatas);
-    });
+      });
   };
 
   componentDidMount = () => {
@@ -98,7 +118,7 @@ class AdminHome extends Component {
         <Nav.Item>
           <Nav.Link
             eventKey="link-1"
-            onClick={e => this.filterHandler(e, this.state.status.GRAPH)}
+            onClick={(e) => this.filterHandler(e, this.state.status.GRAPH)}
           >
             <h5>Graph</h5>
           </Nav.Link>
@@ -106,7 +126,7 @@ class AdminHome extends Component {
         <Nav.Item>
           <Nav.Link
             eventKey="link-2"
-            onClick={e => this.filterHandler(e, this.state.status.ONESTAR)}
+            onClick={(e) => this.filterHandler(e, this.state.status.ONESTAR)}
           >
             <h5>One Star</h5>
           </Nav.Link>
@@ -114,7 +134,7 @@ class AdminHome extends Component {
         <Nav.Item>
           <Nav.Link
             eventKey="link-3"
-            onClick={e => this.filterHandler(e, this.state.status.TWOSTAR)}
+            onClick={(e) => this.filterHandler(e, this.state.status.TWOSTAR)}
           >
             <h5>Two Star</h5>
           </Nav.Link>
@@ -122,7 +142,7 @@ class AdminHome extends Component {
         <Nav.Item>
           <Nav.Link
             eventKey="link-4"
-            onClick={e => this.filterHandler(e, this.state.status.THREESTAR)}
+            onClick={(e) => this.filterHandler(e, this.state.status.THREESTAR)}
           >
             <h5>Three Star</h5>
           </Nav.Link>
@@ -152,18 +172,6 @@ class AdminHome extends Component {
           <td className="align-middle">
             <h5>คะแนน</h5>
           </td>
-          <td className="align-middle">
-            <h5>ด้านการเรียน</h5>
-          </td>
-          <td className="align-middle">
-            <h5>ด้านสุขภาพ</h5>
-          </td>
-          <td className="align-middle">
-            <h5>ด้านครอบครัว</h5>
-          </td>
-          <td className="align-middle">
-            <h5>ด้านอื่นๆ</h5>
-          </td>
         </tr>
       </thead>
     );
@@ -178,32 +186,27 @@ class AdminHome extends Component {
       lineWidth: 100,
       labels: {
         fontSize: 20,
-        padding: 30
-      }
+        padding: 30,
+      },
     };
-    var commentDisp = this.state.comment.map((com,idx)=>(
-    <li><h5 key={idx}>{com}</h5></li>
-    ));
     return (
       <Col className="text-center bg-white chart">
         <div className="mt-3">
-        <Pie
-          data={{
-            labels: this.state.labels,
-            datasets: this.state.datasets
-          }}
-          
-          options={{ legend: options }}
-        />
-        </div>
-        <h2 className="mt-5 text-left">ข้อเสนอแนะ</h2>
-        <div className="mb-3 text-left">
-          <ul>
-            {commentDisp}
-          </ul>
+          <Pie
+            data={{
+              labels: this.state.labels,
+              datasets: this.state.datasets,
+            }}
+            options={{ legend: options }}
+          />
         </div>
       </Col>
     );
+  };
+
+  linkToDetail = (userId) => {
+    SessionStorageService.setUserID(userId);
+    window.location.href = "/admin/student";
   };
 
   tableData = () => {
@@ -221,18 +224,26 @@ class AdminHome extends Component {
       case this.state.status.THREESTAR:
         idxList = this.state.dataCategory.threestar;
         break;
-      default: idxList=this.state.dataCategory.onestar;
+      default:
+        idxList = this.state.dataCategory.onestar;
     }
-    const data = idxList.map(id => (
-      <tr className="text-left">
-        <td className="align-middle">{this.state.userDatas[id].name}</td>
-        <td className="align-middle">{this.state.userDatas[id].userId}</td>
-        <td className="align-middle text-center">{this.state.major[this.state.userDatas[id].major]}</td>
-        <td className="align-middle text-center">{this.state.userDatas[id].sumScore}</td>
-        <td className="align-middle">{this.state.userDatas[id].helpStudy}</td>
-        <td className="align-middle">{this.state.userDatas[id].helpHealth}</td>
-        <td className="align-middle">{this.state.userDatas[id].helpFamily}</td>
-        <td className="align-middle">{this.state.userDatas[id].helpOther}</td>
+    const data = idxList.map((id) => (
+      <tr
+        className="text-left link-to-detail"
+        onClick={() => this.linkToDetail(this.state.userDatas[id].userId)}
+      >
+        <td className="align-middle">
+          <h5>{this.state.userDatas[id].name}</h5>
+        </td>
+        <td className="align-middle text-center">
+          <h5>{this.state.userDatas[id].userId}</h5>
+        </td>
+        <td className="align-middle text-center">
+          <h5>{this.state.major[this.state.userDatas[id].major]}</h5>
+        </td>
+        <td className="align-middle text-center">
+          <h5>{this.state.userDatas[id].sumScore}</h5>
+        </td>
       </tr>
     ));
 
@@ -248,7 +259,6 @@ class AdminHome extends Component {
     if (!this.state.isUserDataLoad) {
       return (
         <div className="main-bg text-center">
-          <NavBar mode="admin" />
           <Spinner
             animation="grow"
             variant="warning"
@@ -259,10 +269,9 @@ class AdminHome extends Component {
     }
     return (
       <div className="main-bg">
-        <NavBar />
-        <Container id="AdminHome-box">
+        <Container>
           <Row className="mt-3">
-            <Col className="text-center bg-white chart pt-3 mb-3">
+            <Col className="text-center bg-white chart pt-1 pb-1">
               {this.tabHeader()}
               {this.tableData()}
             </Col>

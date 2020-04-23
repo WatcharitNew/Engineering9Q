@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import "./Question.css";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
-import LocalStorageService from "./LocalStorageService";
+import SessionStorageService from "../SessionStorageService";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-var utilities = require("./Utilities.json");
+var utilities = require("../Utilities.json");
+var Qs = require('qs');
 
 class Question extends Component {
   constructor(props) {
@@ -16,9 +17,9 @@ class Question extends Component {
       listAnswer: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       maxAnsQuest: 0,
       redirectToSummary: false,
-      userID: LocalStorageService.getUserID(),
-      userName: LocalStorageService.getUserName(),
-      major: LocalStorageService.getMajor(),
+      userID: SessionStorageService.getUserID(),
+      userName: SessionStorageService.getUserName(),
+      major: SessionStorageService.getMajor(),
       redirectToHome: false,
       fade: false,
     };
@@ -44,8 +45,8 @@ class Question extends Component {
           cancelButtonText: "ไม่",
           confirmButtonText: "ใช่",
           showCancelButton: true,
-          reverseButtons: true
-        }).then(result => {
+          reverseButtons: true,
+        }).then((result) => {
           if (result.value) {
             var score = 0;
             var listScore = [];
@@ -54,20 +55,35 @@ class Question extends Component {
               score += tmpScore;
               listScore.push(tmpScore);
             }
-            LocalStorageService.setScore(score);
+            SessionStorageService.setScore(score);
             Swal.fire("ส่งคำตอบแล้ว");
+            const requestBody = {
+              q: "createNewUser",
+              userId: this.state.userID,
+              name: this.state.userName,
+              major: this.state.major,
+              scores: listScore.toString(),
+              sumScore: SessionStorageService.getScore(),
+            };
+
+            const config = {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+            };
+
             axios
-              .post(utilities["backend-url"] + "/users", {
-                userId: this.state.userID,
-                name: this.state.userName,
-                major: this.state.major,
-                scores: listScore,
-              })
-              .then(response => {
+              .post(
+                utilities["backend-url"] + "/api.php",
+                Qs.stringify(requestBody),
+                config
+              )
+              .then((response) => {
                 switch (response.status) {
                   // Created
-                  case 201:
+                  case 200:
                     console.log("already push");
+                    this.setState({ redirectToSummary: true });
                     break;
 
                   // Other case
@@ -75,7 +91,6 @@ class Question extends Component {
                     console.log("Status code is " + response.status);
                 }
               });
-            this.setState({ redirectToSummary: true });
           }
         });
       }
@@ -84,7 +99,7 @@ class Question extends Component {
         text: "โปรดเลือกคำตอบก่อนไปข้อถัดไป",
         icon: "warning",
         confirmButtonColor: "#3085d6",
-        confirmButtonText: "โอเค"
+        confirmButtonText: "โอเค",
       });
     }
   };
@@ -126,12 +141,13 @@ class Question extends Component {
       "สมาธิไม่ดีเวลาทำอะไร เช่น ดูโทรทัศน์ ฟังวิทยุ หรือทำงานที่ต้องใช้ความตั้งใจ",
       "เหนื่อยง่าย หรือ ไม่ค่อยมีแรง",
       "พูดช้า ทำอะไรช้าลง จนคนอื่นสังเกตเห็นได้ หรือกระสับกระส่ายไม่สามารถอยู่นิ่งได้เหมือนที่เคยเป็น",
-      "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี"
+      "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี",
     ];
     return (
-      <h4 className={this.state.fade?"question-fade":""}>
+      <h4 className={this.state.fade ? "question-fade" : ""}>
         <b>
-          ข้อ {this.state.questionIdx + 1} {questionList[this.state.questionIdx]}
+          ข้อ {this.state.questionIdx + 1}{" "}
+          {questionList[this.state.questionIdx]}
         </b>
       </h4>
     );
@@ -150,32 +166,34 @@ class Question extends Component {
       <h4>ไม่มีเลย</h4>,
       <h4>เป็นบางวัน 1-7 วัน</h4>,
       <h4>เป็นบ่อย >7 วัน</h4>,
-      <h4>เป็นทุกวัน</h4>
+      <h4>เป็นทุกวัน</h4>,
     ];
     return answerList.map((ans, idx) => (
-        <Form.Check
-          className={this.state.fade?"question-fade":""}
-          key={idx}
-          custom
-          type="radio"
-          label={ans}
-          id={idx + 1}
-          onChange={e => {
-            let listAns = this.state.listAnswer;
-            listAns[this.state.questionIdx] = idx + 1;
-            var fade = this.state.questionIdx<8?true:false;
-            this.setState({ listAnswer: listAns, fade: fade });
-            setTimeout(() => { //Start the timer
-              this.nextQuestion();
-              this.setState({fade: false});
-            }, 800)
-          }}
-          checked={this.state.listAnswer[this.state.questionIdx] === idx + 1}
-        />
-      ));
+      <Form.Check
+        className={this.state.fade ? "question-fade" : ""}
+        key={idx}
+        custom
+        type="radio"
+        label={ans}
+        id={idx + 1}
+        onChange={(e) => {
+          let listAns = this.state.listAnswer;
+          listAns[this.state.questionIdx] = idx + 1;
+          var fade = this.state.questionIdx < 8 ? true : false;
+          this.setState({ listAnswer: listAns, fade: fade });
+          setTimeout(() => {
+            //Start the timer
+            this.nextQuestion();
+            this.setState({ fade: false });
+          }, 800);
+        }}
+        checked={this.state.listAnswer[this.state.questionIdx] === idx + 1}
+      />
+    ));
   };
 
-  render() {/*
+  render() {
+    /*
     if (this.state.redirectToHome) {
       return <Redirect to="/" />;
     }*/

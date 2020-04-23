@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./NavBar.css";
-import logo from "./material/EngineeringLogo.png";
+import logo from "../material/EngineeringLogo.png";
 import { Navbar} from "react-bootstrap";
 
 class NavBar extends Component {

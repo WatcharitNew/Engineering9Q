@@ -1,18 +1,19 @@
 import React, { Component } from "react";
 import "./Summary.css";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import LocalStorageService from "./LocalStorageService";
+import SessionStorageService from "../SessionStorageService";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import Swal from "sweetalert2";
-var utilities = require("./Utilities.json");
+var utilities = require("../Utilities.json");
+var Qs = require("qs");
 
 class Summary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      score: LocalStorageService.getScore(),
-      userID: LocalStorageService.getUserID(),
+      score: SessionStorageService.getScore(),
+      userID: SessionStorageService.getUserID(),
       redirectToHome: false,
       finish: false,
       showDetail: [false, false, false],
@@ -131,18 +132,34 @@ class Summary extends Component {
           var helpOther = this.state.showDetail[2]
             ? this.state.helpDetail[2]
             : "";
+          const requestBody = {
+            q: "addComment",
+            userId: this.state.userID,
+            helpStudy: helpStudy,
+            helpHealth: helpHealth,
+            helpOther: helpOther,
+            worryText: this.state.stressDetail,
+            isWantPsychologist: this.state.requestHelp === 0 ? 1 : 0,
+          };
+
+          const config = {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          };
+
           axios
-            .patch(utilities["backend-url"] + "/users/" + this.state.userID, {
-              helpStudy: helpStudy,
-              helpHealth: helpHealth,
-              helpOther: helpOther,
-            })
+            .post(
+              utilities["backend-url"] + "/api.php",
+              Qs.stringify(requestBody),
+              config
+            )
             .then((response) => {
               switch (response.status) {
                 // Created
-                case 201:
+                case 200:
                   console.log("already push");
-
+                  this.setState({ finish: true });
                   break;
 
                 // Other case
@@ -150,7 +167,6 @@ class Summary extends Component {
                   console.log("Status code is " + response.status);
               }
             });
-          this.setState({ finish: true });
         }
       });
     }

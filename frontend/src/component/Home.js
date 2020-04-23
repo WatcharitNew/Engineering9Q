@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import "./Home.css";
-import NavBar from "./NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import LocalStorageService from "./LocalStorageService";
+import SessionStorageService from "../SessionStorageService";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
 
@@ -18,18 +17,14 @@ class Home extends Component {
   }
 
   componentDidMount = () => {
-    LocalStorageService.checkOut();
+    SessionStorageService.checkOut();
   };
 
-  submit = () => {/*
-    LocalStorageService.setUserName("test");
-    LocalStorageService.setUserID("6031000021");
-    LocalStorageService.setMajor("CP");
-    this.setState({ redirectToQuestion: true });*/
+  submit = () => {
     if (this.idHandler(this.state.id) && this.nameHandler(this.state.name)) {
-      LocalStorageService.setUserName(this.state.name);
-      LocalStorageService.setUserID(this.state.id);
-      LocalStorageService.setMajor(this.state.major);
+      SessionStorageService.setUserName(this.state.name);
+      SessionStorageService.setUserID(this.state.id);
+      SessionStorageService.setMajor(this.state.major);
       this.setState({ redirectToQuestion: true });
     } else {
       var text = [];
@@ -184,7 +179,6 @@ class Home extends Component {
     if (this.state.redirectToQuestion) return <Redirect to="/instruction" />;
     return (
       <div className="main-bg">
-        <NavBar />
         <Container id="home-box">
           <Row>
             <Col className="text-center">

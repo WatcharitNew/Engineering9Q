@@ -1,0 +1,17 @@
+#admin-student {
+    background-color: white;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+.want {
+    color: red;
+}
+.not-want {
+    color: blue;
+}
+.admin-backbtn {
+    float: left;
+    position: fixed;
+    top: 100px;
+    z-index: 9999;
+}
