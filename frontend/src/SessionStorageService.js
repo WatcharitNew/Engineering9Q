@@ -69,6 +69,26 @@ const SessionStorageService = (function () {
         sessionStorage.removeItem('filter');
     }
 
+    function _setFinish(finish) {
+        sessionStorage.setItem('finish', finish);
+    }
+    function _getFinish() {
+        return sessionStorage.getItem('finish') || '';
+    }
+    function _clearFinish() {
+        sessionStorage.removeItem('finish');
+    }
+
+    function _setToken(token) {
+        sessionStorage.setItem('token', token);
+    }
+    function _getToken() {
+        return sessionStorage.getItem('token') || '';
+    }
+    function _clearToken() {
+        sessionStorage.removeItem('token');
+    }
+
     function _checkOut() {
         _clearUserName();
         _clearUserID();
@@ -76,6 +96,8 @@ const SessionStorageService = (function () {
         _clearMajor();
         _clearMode();
         _clearFilter();
+        _clearFinish();
+        _clearToken();
     }
 
     return {
@@ -98,6 +120,12 @@ const SessionStorageService = (function () {
         setFilter: _setFilter,
         getFilter: _getFilter,
         clearFilter: _clearFilter,
+        setFinish: _setFinish,
+        getFinish: _getFinish,
+        clearFinish: _clearFinish,
+        setToken: _setToken,
+        getToken: _getToken,
+        clearToken: _clearToken,
         checkOut: _checkOut
     }
 })();

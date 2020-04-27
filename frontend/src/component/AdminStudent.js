@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Spinner, Table, Button } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 import "./AdminStudent.css";
 import SessionStorageService from "../SessionStorageService";
@@ -33,6 +34,7 @@ class AdminStudent extends Component {
         nano: "NANO",
         robotic: "ROBOTIC",
       },
+      redirectToAdminHome: false,
     };
   }
 
@@ -63,7 +65,7 @@ class AdminStudent extends Component {
             userData.help = [
               response.data[0].helpStudy,
               response.data[0].helpHealth,
-              response.data[0].helpStudy.helpOther,
+              response.data[0].helpOther,
             ];
             this.setState({ userData: userData, isUserDataLoad: true });
             break;
@@ -161,7 +163,7 @@ class AdminStudent extends Component {
   helpDisp = () => {
     return (
       <Row className="pl-3 pr-3 mt-4">
-        <Table responsive responsive striped bordered hover size="sm">
+        <Table responsive striped bordered hover size="sm">
           {this.headHelpData()}
           <tbody>{this.showHelpData()}</tbody>
         </Table>
@@ -170,8 +172,8 @@ class AdminStudent extends Component {
   };
 
   backToHome = () => {
-    window.location.href = "/admin/home";
-  }
+    this.setState({ redirectToAdminHome: true });
+  };
 
   render() {
     if (!this.state.isUserDataLoad) {
@@ -185,6 +187,7 @@ class AdminStudent extends Component {
         </div>
       );
     }
+    if (this.state.redirectToAdminHome) return <Redirect to="/admin/home" />;
     return (
       <div className="main-bg">
         <Button
@@ -255,12 +258,12 @@ class AdminStudent extends Component {
             <Col>
               <h4
                 className={
-                  this.state.userData.isWantPsychologist === 1
+                  this.state.userData.isWantPsychologist === "1"
                     ? "want"
                     : "not-want"
                 }
               >
-                {this.state.userData.isWantPsychologist === 1
+                {this.state.userData.isWantPsychologist === "1"
                   ? "ต้องการพบ"
                   : "ไม่ต้องการพบ"}
               </h4>

@@ -3,8 +3,8 @@ import "./Summary.css";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import SessionStorageService from "../SessionStorageService";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
 import Swal from "sweetalert2";
+import LoadSpinner from "./LoadSpinner";
 var utilities = require("../Utilities.json");
 var Qs = require("qs");
 
@@ -15,11 +15,15 @@ class Summary extends Component {
       score: SessionStorageService.getScore(),
       userID: SessionStorageService.getUserID(),
       redirectToHome: false,
-      finish: false,
+      finish:
+        SessionStorageService.getFinish() === ""
+          ? "false"
+          : SessionStorageService.getFinish(),
       showDetail: [false, false, false],
       helpDetail: ["", "", ""],
       stressDetail: "",
       requestHelp: -1,
+      setLoading: false,
     };
   }
 
@@ -35,29 +39,56 @@ class Summary extends Component {
     var score = this.state.score;
     const label = "นิสิตมีความเสี่ยงภาวะซึมเศร้า";
     if (score < 7) {
-      text = <h4>{label} ระดับน้อยมาก</h4>;
+      text = (
+        <h4>
+          {label} <br />
+          ระดับน้อยมาก
+        </h4>
+      );
     } else if (score < 13) {
-      text = <h4>{label} ระดับน้อย</h4>;
+      text = (
+        <h4>
+          {label} <br />
+          ระดับน้อย
+        </h4>
+      );
     } else if (score < 19) {
-      text = <h4>{label} ระดับปานกลาง</h4>;
+      text = (
+        <h4>
+          {label} <br />
+          ระดับปานกลาง
+        </h4>
+      );
     } else {
-      text = <h4>{label} ระดับรุนแรง</h4>;
+      text = (
+        <h4>
+          {label} <br />
+          ระดับรุนแรง
+        </h4>
+      );
     }
     return text;
+  };
+
+  detailHandler = (detail) => {
+    const regEx = /^[ก-์a-zA-Z0-9\s]*$/;
+    return regEx.test(detail);
   };
 
   detailArea = (idx) => {
     if (this.state.showDetail[idx]) {
       return (
-        <Col>
+        <Col xs={12}>
           <Form.Control
             as="textarea"
             rows="1"
             placeholder="อธิบายเพิ่มเติม"
             onChange={(e) => {
-              var helpDetail = this.state.helpDetail;
-              helpDetail[idx] = e.target.value;
-              this.setState({ helpDetail: helpDetail });
+              if (this.detailHandler(e.target.value)) {
+                var helpDetail = this.state.helpDetail;
+                helpDetail[idx] = e.target.value;
+                this.setState({ helpDetail: helpDetail });
+              }
             }}
             value={this.state.helpDetail[idx]}
           />
@@ -75,7 +106,7 @@ class Summary extends Component {
     ];
     return helpList.map((help, idx) => (
       <Row className="mb-3" key={idx + 1}>
-        <Col xs={3}>
+        <Col xs={12}>
           <Form.Check
             custom
             type="checkbox"
@@ -104,7 +135,7 @@ class Summary extends Component {
   };
 
   submit = () => {
-    if (this.state.requestHelp == -1) {
+    if (this.state.requestHelp === -1) {
       Swal.fire({
         text: "โปรดเลือกความต้องการด้วย",
         icon: "warning",
@@ -123,6 +154,7 @@ class Summary extends Component {
         reverseButtons: true,
       }).then((result) => {
         if (result.value) {
+          this.setState({ setLoading: true });
           var helpStudy = this.state.showDetail[0]
             ? this.state.helpDetail[0]
             : "";
@@ -159,7 +191,8 @@ class Summary extends Component {
                 // Created
                 case 200:
                   console.log("already push");
-                  this.setState({ finish: true });
+                  SessionStorageService.setFinish("true");
+                  this.setState({ finish: "true" });
                   break;
 
                 // Other case
@@ -174,7 +207,7 @@ class Summary extends Component {
 
   questionDisp = (quest) => {
     return (
-      <h4 className="background-orange text-light label-curve pt-3 pb-3">
+      <h4 className="background-orange text-light label-curve pt-3 pb-3 text-center">
         {quest}
       </h4>
     );
@@ -186,9 +219,17 @@ class Summary extends Component {
         as="textarea"
         rows="2"
         onChange={(e) => {
-          this.setState({ stressDetail: e.target.value });
+          if (this.detailHandler(e.target.value)) {
+            this.setState({ stressDetail: e.target.value });
+          } else {
+            Swal.fire({
+              html: "กรุณาพิมพ์ภาษาไทย ภาษาอังกฤษ ตัวเลข และเว้นวรรคเท่านั้น",
+              icon: 'info',
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "ตกลง",
+            });
+          }
         }}
-        placeholder=""
         value={this.state.stressDetail}
         placeholder="อธิบายเพิ่มเติม"
       />
@@ -199,7 +240,7 @@ class Summary extends Component {
     const requestList = [<h5>ต้องการ</h5>, <h5>ไม่ต้องการ</h5>];
     return requestList.map((request, idx) => (
       <Row className="mb-3" key={idx + 1}>
-        <Col xs={3}>
+        <Col>
           <Form.Check
             custom
             type="radio"
@@ -220,27 +261,11 @@ class Summary extends Component {
       <Container id="summary-help-box">
         <Row>
           <Col className="text-center">
-            {this.questionDisp(
-              "นิสิตอยากให้ทางคณะช่วยเหลือด้านไหนบ้าง สามารถเสนอแนะได้ตามหัวข้อด้านล่าง"
-            )}
-          </Col>
-        </Row>
-        <Row>
-          <Col className="ml-5 mr-5 mt-1 mb-1">
-            <Form className="ml-4">
-              <fieldset>
-                <Form.Group>{this.helpAnswerDisp()}</Form.Group>
-              </fieldset>
-            </Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="text-center">
             {this.questionDisp("ขอให้นิสิตอธิบายความกังวลหรือความเครียดสั้นๆ")}
           </Col>
         </Row>
         <Row>
-          <Col className="ml-5 mr-5 mt-2 mb-4">{this.stressAnswerDisp()}</Col>
+          <Col className="ml-4 mr-4 mt-2 mb-4">{this.stressAnswerDisp()}</Col>
         </Row>
         <Row>
           <Col className="text-center mt-1 mb-1">
@@ -251,9 +276,25 @@ class Summary extends Component {
         </Row>
         <Row>
           <Col className="ml-5 mr-5 mt-2">
-            <Form className="ml-4">
+            <Form className="ml-3">
               <fieldset>
                 <Form.Group>{this.requestHelpDisp()}</Form.Group>
+              </fieldset>
+            </Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="text-center">
+            {this.questionDisp(
+              "นิสิตอยากให้ทางคณะช่วยเหลือด้านไหนบ้าง สามารถเสนอแนะได้ตามหัวข้อด้านล่าง"
+            )}
+          </Col>
+        </Row>
+        <Row>
+          <Col className="ml-5 mr-5 mt-1 mb-1">
+            <Form className="ml-3">
+              <fieldset>
+                <Form.Group>{this.helpAnswerDisp()}</Form.Group>
               </fieldset>
             </Form>
           </Col>
@@ -276,22 +317,65 @@ class Summary extends Component {
     );
   };
 
+  contentDisp = (text) => {
+    return (
+      <Row>
+        <Col className="text-center">
+          <h4>{text}</h4>
+        </Col>
+      </Row>
+    );
+  };
+
   contactDisp = () => {
     return (
-      <Container id="summary-tel-box">
-        <Row>
-          <Col className="text-center">
-            <h4>เบอร์สายด่วน 02 218 0540</h4>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="text-center">
-            <a href="https://wellness.chula.ac.th/">
-              <h4>wellness.chula.ac.th</h4>
-            </a>
-          </Col>
-        </Row>
-      </Container>
+      <div>
+        <Container id="summary-tel-box">
+          {this.questionDisp("ขอบคุณที่ร่วมทำแบบประเมิน")}
+          {this.contentDisp("แหล่งอ้างอิง : กรมสุขภาพจิต กระทรวงสาธารณสุข")}
+        </Container>
+        <Container id="summary-tel-box">
+          {this.questionDisp(
+            "หากนิสิตต้องการความช่วยเหลือหรือมีปัญหาสามารถปรึกษาได้ที่"
+          )}
+          {this.contentDisp(
+            "หน่วยส่งเสริมสุขภาวะนิสิต (ศูนย์ให้บริการปรึกษาเชิงจิตวิทยาสำหรับนิสิต)"
+          )}
+          <Row>
+            <Col className="text-center mb-3">
+              <h4>
+                เบอร์โทร 02 218 0540 website :
+                <a href="https://wellness.chula.ac.th/">
+                  {" "}
+                  wellness.chula.ac.th
+                </a>
+              </h4>
+            </Col>
+          </Row>
+          {this.contentDisp(
+            "ภารกิจกิจการนิสิตคณะวิศวกรรมศาสตร์ เบอร์โทร 02 218 6349"
+          )}
+          <Row>
+            <Col className="text-center mb-3">
+              <h4>
+                <a href="https://www.facebook.com/%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%99%E0%B8%B4%E0%B8%AA%E0%B8%B4%E0%B8%95-%E0%B8%84%E0%B8%93%E0%B8%B0%E0%B8%A7%E0%B8%B4%E0%B8%A8%E0%B8%A7%E0%B8%81%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C-%E0%B8%88%E0%B8%B8%E0%B8%AC%E0%B8%B2%E0%B8%AF-%E0%B9%80%E0%B8%9E%E0%B8%88-858015854257493/">
+                  Facebook : กิจการนิสิต-คณะวิศวกรรมศาสตร์-จุฬาฯ-เพจ
+                </a>
+              </h4>
+            </Col>
+          </Row>
+          {this.contentDisp("ภารกิจทะเบียนและประเมินผล เบอร์โทร 02 218 6300")}
+          <Row>
+            <Col className="text-center">
+              <h4>
+                <a href="https://th-th.facebook.com/%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%97%E0%B8%B0%E0%B9%80%E0%B8%9A%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A1%E0%B8%B4%E0%B8%99%E0%B8%9C%E0%B8%A5-%E0%B8%84%E0%B8%93%E0%B8%B0%E0%B8%A7%E0%B8%B4%E0%B8%A8%E0%B8%A7%E0%B8%81%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%A8%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%A3%E0%B9%8C-%E0%B8%88%E0%B8%B8%E0%B8%AC%E0%B8%B2%E0%B8%AF-1656445181234187/">
+                  Facebook : งานทะเบียนและประเมินผล คณะวิศวกรรมศาสตร์ จุฬาฯ
+                </a>
+              </h4>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     );
   };
 
@@ -309,29 +393,16 @@ class Summary extends Component {
   };
 
   render() {
-    if (this.state.finish) {
-      return (
-        <div className="main-bg">
-          <Container>
-            <Row>
-              <Col className="text-center text-light mt-5">
-                <div className="finish-text">
-                  <h3>ขอบคุณที่ร่วมทำแบบประเมิน</h3>
-                  <h3>แหล่งอ้างอิง : กรมสุขภาพจิต กระทรวงสาธารณสุข</h3>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </div>
-      );
-    } /*else if (this.state.redirectToHome) {
-      return <Redirect to="/" />;
-    }*/
+    if (this.state.finish === "true") {
+      return <div className="main-bg">{this.contactDisp()}</div>;
+    }
+    if (this.state.setLoading) {
+      return <LoadSpinner />;
+    }
     return (
       <div className="main-bg">
         {this.showResult()}
         {this.helpQuestion()}
-        {this.contactDisp()}
       </div>
     );
   }

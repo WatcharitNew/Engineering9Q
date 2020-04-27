@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import "./Instruction.css";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 
 class Instruction extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      redirectToQuestion: false,
+    };
   }
 
   instructionArea = () => {
@@ -37,6 +40,7 @@ class Instruction extends Component {
   };
 
   render() {
+    if (this.state.redirectToQuestion) return <Redirect to="/question" />;
     return (
       <div className="main-bg">
         <Container>
@@ -59,7 +63,11 @@ class Instruction extends Component {
           </Row>
           <Row className="instruction-btn mb-3">
             <Col className="text-center ">
-              <Button size="lg" type="submit" href="/question">
+              <Button
+                size="lg"
+                type="submit"
+                onClick={() => this.setState({ redirectToQuestion: true })}
+              >
                 ยอมรับ
               </Button>
             </Col>

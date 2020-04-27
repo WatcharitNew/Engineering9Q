@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Spinner, Nav, Table } from "react-bootstrap";
+import { Container, Row, Col, Nav, Table } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 import "./AdminHome.css";
 import { Pie } from "react-chartjs-2";
 import SessionStorageService from "../SessionStorageService";
+import LoadSpinner from "./LoadSpinner";
 var utilities = require("../Utilities.json");
 var Qs = require("qs");
 
@@ -52,6 +54,7 @@ class AdminHome extends Component {
         nano: "NANO",
         robotic: "ROBOTIC",
       },
+      redirectToAdminStudent: false,
     };
   }
 
@@ -206,7 +209,7 @@ class AdminHome extends Component {
 
   linkToDetail = (userId) => {
     SessionStorageService.setUserID(userId);
-    window.location.href = "/admin/student";
+    this.setState({ redirectToAdminStudent: true });
   };
 
   tableData = () => {
@@ -257,16 +260,10 @@ class AdminHome extends Component {
 
   render() {
     if (!this.state.isUserDataLoad) {
-      return (
-        <div className="main-bg text-center">
-          <Spinner
-            animation="grow"
-            variant="warning"
-            className="loading spinner"
-          />
-        </div>
-      );
+      return <LoadSpinner />;
     }
+    if (this.state.redirectToAdminStudent)
+      return <Redirect to="/admin/student" />;
     return (
       <div className="main-bg">
         <Container>

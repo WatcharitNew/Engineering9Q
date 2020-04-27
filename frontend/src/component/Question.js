@@ -6,8 +6,9 @@ import SessionStorageService from "../SessionStorageService";
 import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import LoadSpinner from "./LoadSpinner";
 var utilities = require("../Utilities.json");
-var Qs = require('qs');
+var Qs = require("qs");
 
 class Question extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class Question extends Component {
       major: SessionStorageService.getMajor(),
       redirectToHome: false,
       fade: false,
+      setLoading: false,
     };
   }
 
@@ -30,6 +32,7 @@ class Question extends Component {
     if (this.state.userID === "") {
       this.setState({ redirectToHome: true });
     }
+    SessionStorageService.setFinish(false);
   };
 
   nextQuestion = () => {
@@ -48,6 +51,7 @@ class Question extends Component {
           reverseButtons: true,
         }).then((result) => {
           if (result.value) {
+            this.setState({ setLoading: true });
             var score = 0;
             var listScore = [];
             for (let i = 0; i < this.state.listAnswer.length; i++) {
@@ -193,12 +197,11 @@ class Question extends Component {
   };
 
   render() {
-    /*
-    if (this.state.redirectToHome) {
-      return <Redirect to="/" />;
-    }*/
     if (this.state.redirectToSummary) {
       return <Redirect to="/summary" />;
+    }
+    if (this.state.setLoading) {
+      return <LoadSpinner />;
     }
 
     return (

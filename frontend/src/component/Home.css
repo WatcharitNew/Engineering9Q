@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Kanit&display=swap');
 html, body, .main-bg {
     background-color: #710000;
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
     font-family: 'Kanit', sans-serif;
 }
 #home-box {

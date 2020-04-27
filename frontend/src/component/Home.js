@@ -21,7 +21,8 @@ class Home extends Component {
   };
 
   submit = () => {
-    if (this.idHandler(this.state.id) && this.nameHandler(this.state.name)) {
+    if (this.idHandler(this.state.id)) {
+      
       SessionStorageService.setUserName(this.state.name);
       SessionStorageService.setUserID(this.state.id);
       SessionStorageService.setMajor(this.state.major);
@@ -185,9 +186,7 @@ class Home extends Component {
               <h1 className="text-white label-topic">แบบประเมิน 9Q</h1>
             </Col>
           </Row>
-          {this.nameArea()}
           {this.idArea()}
-          {this.majorArea()}
           {this.submitBtn()}
         </Container>
       </div>
