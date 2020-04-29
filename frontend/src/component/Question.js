@@ -9,6 +9,7 @@ import axios from "axios";
 import LoadSpinner from "./LoadSpinner";
 var utilities = require("../Utilities.json");
 var Qs = require("qs");
+var CryptoJS = require("crypto-js");
 
 class Question extends Component {
   constructor(props) {
@@ -60,12 +61,19 @@ class Question extends Component {
               listScore.push(tmpScore);
             }
             SessionStorageService.setScore(score);
-            Swal.fire("ส่งคำตอบแล้ว");
+            
+            var idBytes  = CryptoJS.AES.decrypt(this.state.userID, 'id');
+            var idText = idBytes.toString(CryptoJS.enc.Utf8);
+            var nameBytes  = CryptoJS.AES.decrypt(this.state.userName, 'username');
+            var nameText = nameBytes.toString(CryptoJS.enc.Utf8);
+            var majorBytes  = CryptoJS.AES.decrypt(this.state.major, 'major');
+            var majorText = majorBytes.toString(CryptoJS.enc.Utf8);
+
             const requestBody = {
               q: "createNewUser",
-              userId: this.state.userID,
-              name: this.state.userName,
-              major: this.state.major,
+              userId: idText,
+              name: nameText,
+              major: majorText,
               scores: listScore.toString(),
               sumScore: SessionStorageService.getScore(),
             };
@@ -87,6 +95,7 @@ class Question extends Component {
                   // Created
                   case 200:
                     console.log("already push");
+                    Swal.fire("ส่งคำตอบแล้ว");
                     this.setState({ redirectToSummary: true });
                     break;
 

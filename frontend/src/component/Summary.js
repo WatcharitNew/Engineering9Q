@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import LoadSpinner from "./LoadSpinner";
 var utilities = require("../Utilities.json");
 var Qs = require("qs");
+var CryptoJS = require("crypto-js");
 
 class Summary extends Component {
   constructor(props) {
@@ -164,9 +165,12 @@ class Summary extends Component {
           var helpOther = this.state.showDetail[2]
             ? this.state.helpDetail[2]
             : "";
+
+          var idBytes = CryptoJS.AES.decrypt(this.state.userID, "id");
+          var idText = idBytes.toString(CryptoJS.enc.Utf8);
           const requestBody = {
             q: "addComment",
-            userId: this.state.userID,
+            userId: idText,
             helpStudy: helpStudy,
             helpHealth: helpHealth,
             helpOther: helpOther,
@@ -224,7 +228,7 @@ class Summary extends Component {
           } else {
             Swal.fire({
               html: "กรุณาพิมพ์ภาษาไทย ภาษาอังกฤษ ตัวเลข และเว้นวรรคเท่านั้น",
-              icon: 'info',
+              icon: "info",
               confirmButtonColor: "#3085d6",
               confirmButtonText: "ตกลง",
             });

@@ -28,11 +28,7 @@ class AdminStudent extends Component {
         water: "แหล่งน้ำ",
         ie: "อุตสาหการ",
         bme: "ชีวเวช",
-        adme: "ADME",
-        aero: "AERO",
-        ice: "ICE",
-        nano: "NANO",
-        robotic: "ROBOTIC",
+        ise: "ISE",
       },
       redirectToAdminHome: false,
     };
@@ -222,7 +218,7 @@ class AdminStudent extends Component {
           <Row className="pl-5">
             <Col>
               <h3>
-                <b>ภาค</b> {this.state.major[this.state.userData.major]}
+                <b>ภาค</b> {this.state.userData.major}
               </h3>
             </Col>
             <Col>

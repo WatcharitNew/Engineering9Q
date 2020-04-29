@@ -132,11 +132,7 @@ class Home extends Component {
         <option value="water">แหล่งน้ำ</option>
         <option value="ie">อุตสาหการ</option>
         <option value="bme">ชีวเวช</option>
-        <option value="adme">ADME</option>
-        <option value="aero">AERO</option>
-        <option value="ice">ICE</option>
-        <option value="nano">NANO</option>
-        <option value="robotic">ROBOTIC</option>
+        <option value="ise">ISE</option>
       </Form.Control>
     );
   };

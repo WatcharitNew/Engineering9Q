@@ -2,7 +2,7 @@
 html, body, .main-bg {
     background-color: #710000;
     width: auto;
-    height: auto;
+    min-height: auto;
     font-family: 'Kanit', sans-serif;
 }
 #home-box {

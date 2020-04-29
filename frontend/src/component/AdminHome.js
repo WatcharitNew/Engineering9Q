@@ -48,11 +48,7 @@ class AdminHome extends Component {
         water: "แหล่งน้ำ",
         ie: "อุตสาหการ",
         bme: "ชีวเวช",
-        adme: "ADME",
-        aero: "AERO",
-        ice: "ICE",
-        nano: "NANO",
-        robotic: "ROBOTIC",
+        ise: "ISE",
       },
       redirectToAdminStudent: false,
     };
@@ -79,7 +75,6 @@ class AdminHome extends Component {
           // Created
           case 200:
             console.log("already push");
-            console.log(response.data);
             const userDatas = response.data;
             var datasets = this.state.datasets;
             var dataCategory = this.state.dataCategory;
@@ -242,7 +237,7 @@ class AdminHome extends Component {
           <h5>{this.state.userDatas[id].userId}</h5>
         </td>
         <td className="align-middle text-center">
-          <h5>{this.state.major[this.state.userDatas[id].major]}</h5>
+          <h5>{this.state.userDatas[id].major}</h5>
         </td>
         <td className="align-middle text-center">
           <h5>{this.state.userDatas[id].sumScore}</h5>
@@ -262,8 +257,9 @@ class AdminHome extends Component {
     if (!this.state.isUserDataLoad) {
       return <LoadSpinner />;
     }
-    if (this.state.redirectToAdminStudent)
+    if (this.state.redirectToAdminStudent) {
       return <Redirect to="/admin/student" />;
+    }
     return (
       <div className="main-bg">
         <Container>
