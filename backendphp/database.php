@@ -16,6 +16,7 @@
         private function connectDB() {
             try {
                 $this->myPDO = new PDO('mysql:host='.$this->host.';dbname='.$this->dbname, $this->user, $this->pass);
+                $this->myPDO->exec("set names utf8");
                 }
             catch(PDOException $e)
                 {
@@ -27,8 +28,6 @@
         public function insert($query) {
             $statement = $this->myPDO->prepare($query);
             $result = $statement->execute();
-            //echo($query);
-            //echo($result);
             if($result) return json_encode($result);
             return false;
         }

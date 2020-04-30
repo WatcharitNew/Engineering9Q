@@ -21,7 +21,7 @@
         }
 
         public function createUser($userId,$name,$major,$scores,$sumScore) {
-            $query = 'INSERT INTO user (userId, name, major, scores, sumScore, createdTime, isWantPsychologist) VALUES (\''.$userId.'\',\''.$name.'\',\''.$major.'\',\''.$scores.'\','.$sumScore.',now(),0)';
+            $query = 'INSERT INTO user (userId, name, major, scores, sumScore, createdTime, isWantPsychologist) VALUES (\''.$userId.'\',\''.$name.'\',\''.$major.'\',\''.$scores.'\','.$sumScore.',now(),0) on duplicate key update  scores =\''.$scores.'\', sumScore ='.$sumScore;
             return $this->db->insert($query);
         }
 

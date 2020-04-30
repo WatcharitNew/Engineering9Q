@@ -3,6 +3,7 @@
 	header("Access-Control-Allow-Methods: GET,POST,PUT,DELETE");
 	header("Access-Control-Expose-Headers: access-control-allow-origin");
 	header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+	header('Content-Type: text/html; charset=utf-8');
 	include_once 'user.php';
 
 	session_start();
