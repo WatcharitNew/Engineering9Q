@@ -54,8 +54,7 @@ class AdminStudent extends Component {
         switch (response.status) {
           // Created
           case 200:
-            console.log("already push");
-            console.log(response.data[0]);
+            console.log("already push"); 
             const userData = response.data[0];
             userData.help = [
               response.data[0].helpStudy,

@@ -28,7 +28,6 @@ class Summary extends Component {
   }
 
   componentDidMount = () => {
-    console.log(this.state.userID);
     if (this.state.userID === "") {
       this.setState({ redirectToHome: true });
     }
@@ -117,7 +116,6 @@ class Summary extends Component {
               var showDetail = this.state.showDetail;
               showDetail[idx] = !showDetail[idx];
               this.setState({ showDetail: showDetail });
-              console.log(this.state.showDetail);
             }}
           />
         </Col>

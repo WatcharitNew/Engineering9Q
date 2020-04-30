@@ -18,22 +18,35 @@ class Question extends Component {
       listAnswer: [0, 0, 0, 0, 0, 0, 0, 0, 0],
       maxAnsQuest: 0,
       redirectToSummary: false,
-      userID: SessionStorageService.getUserID(),
-      userName: SessionStorageService.getUserName(),
-      major: SessionStorageService.getMajor(),
+      userID: "",
+      userName: "",
+      major: "",
       redirectToHome: false,
       fade: false,
       setLoading: false,
     };
   }
 
-  componentDidMount = () => {
-    console.log(this.state.userID);
+  componentDidMount() {
     if (this.state.userID === "") {
       this.setState({ redirectToHome: true });
     }
     SessionStorageService.setFinish(false);
-  };
+
+    var idBytes = CryptoJS.AES.decrypt(SessionStorageService.getUserID(), "id");
+    var idText = idBytes.toString(CryptoJS.enc.Utf8);
+    var nameBytes = CryptoJS.AES.decrypt(
+      SessionStorageService.getUserName(),
+      "username"
+    );
+    var nameText = nameBytes.toString(CryptoJS.enc.Utf8);
+    var majorBytes = CryptoJS.AES.decrypt(
+      SessionStorageService.getMajor(),
+      "major"
+    );
+    var majorText = majorBytes.toString(CryptoJS.enc.Utf8);
+    this.setState({ userID: idText, userName: nameText, major: majorText });
+  }
 
   nextQuestion = () => {
     if (this.state.listAnswer[this.state.questionIdx] !== 0) {
@@ -60,21 +73,12 @@ class Question extends Component {
               listScore.push(tmpScore);
             }
             SessionStorageService.setScore(score);
-            
-            var idBytes  = CryptoJS.AES.decrypt(this.state.userID, 'id');
-            var idText = idBytes.toString(CryptoJS.enc.Utf8);
-            var nameBytes  = CryptoJS.AES.decrypt(this.state.userName, 'username');
-            var nameText = nameBytes.toString(CryptoJS.enc.Utf8);
-            var majorBytes  = CryptoJS.AES.decrypt(this.state.major, 'major');
-            var majorText = majorBytes.toString(CryptoJS.enc.Utf8);
-
-            console.log(nameText, idText, majorText);
 
             const requestBody = {
               q: "createNewUser",
-              userId: idText,
-              name: nameText,
-              major: majorText,
+              userId: this.state.userID,
+              name: this.state.userName,
+              major: this.state.major,
               scores: listScore.toString(),
               sumScore: SessionStorageService.getScore(),
             };
@@ -86,7 +90,8 @@ class Question extends Component {
             };
 
             axios
-              .post( process.env.REACT_APP_BACKEND_URL,
+              .post(
+                process.env.REACT_APP_BACKEND_URL,
                 Qs.stringify(requestBody),
                 config
               )
@@ -95,7 +100,7 @@ class Question extends Component {
                   // Created
                   case 200:
                     console.log("already push");
-                    Swal.fire("ส่งคำตอบแล้ว");
+                    Swal.fire({ text: "ส่งคำตอบแล้ว", icon: "success" });
                     this.setState({ redirectToSummary: true });
                     break;
 

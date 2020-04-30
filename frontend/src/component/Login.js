@@ -104,10 +104,10 @@ class Login extends Component {
                   switch (response.status) {
                     // Created
                     case 200:
-                      var nameEncrypt = CryptoJS.AES.encrypt(response.data.name, 'username').toString();
-                      var idEncrypt = CryptoJS.AES.encrypt(response.data.student_id, 'id').toString();
-                      var majorEncrypt = CryptoJS.AES.encrypt(response.data.department, 'major').toString();
-
+                      var nameEncrypt = CryptoJS.AES.encrypt(response.data.data.name, 'username').toString();
+                      var idEncrypt = CryptoJS.AES.encrypt(response.data.data.student_id, 'id').toString();
+                      var majorEncrypt = CryptoJS.AES.encrypt(response.data.data.department, 'major').toString();
+                      
                       SessionStorageService.setUserName(nameEncrypt);
                       SessionStorageService.setUserID(idEncrypt);
                       SessionStorageService.setMajor(majorEncrypt);
@@ -131,7 +131,6 @@ class Login extends Component {
 
             // Other case
             default:
-              console.log("token fail");
               console.log("Status code is " + response.status);
           }
         });

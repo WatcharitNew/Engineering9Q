@@ -91,11 +91,8 @@ class AdminHome extends Component {
             datasets[0].data[1] = dataCategory.twostar.length;
             datasets[0].data[2] = dataCategory.threestar.length;
             this.setState({ datasets: datasets });
-            console.log(this.state.datasets[0].data);
             this.setState({ dataCategory: dataCategory });
-            console.log(this.state.dataCategory);
             this.setState({ userDatas: userDatas, isUserDataLoad: true });
-            console.log(this.state.userDatas);
             break;
 
           // Other case
