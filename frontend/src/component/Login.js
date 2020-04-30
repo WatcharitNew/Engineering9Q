@@ -88,7 +88,6 @@ class Login extends Component {
           switch (response.status) {
             // Created
             case 200:
-              console.log(response.data);
               const requestBodyLogin = {
                 q: "cunetauth",
                 token: response.data.token,
@@ -105,7 +104,6 @@ class Login extends Component {
                   switch (response.status) {
                     // Created
                     case 200:
-                      console.log(response.data);
                       var nameEncrypt = CryptoJS.AES.encrypt(response.data.name, 'username').toString();
                       var idEncrypt = CryptoJS.AES.encrypt(response.data.student_id, 'id').toString();
                       var majorEncrypt = CryptoJS.AES.encrypt(response.data.department, 'major').toString();
