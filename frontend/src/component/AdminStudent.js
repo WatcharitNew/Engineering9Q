@@ -130,7 +130,7 @@ class AdminStudent extends Component {
   };
 
   showHelpData = () => {
-    const helpList = ["ด้านการเรียน", "ด้านครอบครัว", "อื่นๆ"];
+    const helpList = ["ด้านการเรียน", "ด้านสุขภาพ", "อื่นๆ"];
     return helpList.map((help, index) => (
       <tr key={index}>
         <td>

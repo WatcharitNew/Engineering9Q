@@ -68,7 +68,7 @@ class Login extends Component {
   };
 
   submit = () => {
-    if (this.state.username === "admin" && this.state.password === "saroj") {
+    if (this.state.username === process.env.REACT_APP_ADMIN_USERNAME && this.state.password === process.env.REACT_APP_ADMIN_PASSWORD) {
       var ciphertext = CryptoJS.AES.encrypt("admin", "saroj").toString();
       SessionStorageService.setToken(ciphertext);
       this.setState({ redirectToAdminHome: true });
