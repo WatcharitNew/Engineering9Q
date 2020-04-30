@@ -80,8 +80,7 @@ class Login extends Component {
       };
 
       axios
-        .post(
-          "https://student.eng.chula.ac.th/tstudent/auth/service.php",
+        .post( process.env.REACT_APP_STUDENT_ENG_CHULA_URL,
           Qs.stringify(requestBody),
           config
         )
@@ -89,16 +88,16 @@ class Login extends Component {
           switch (response.status) {
             // Created
             case 200:
+              console.log(response.data);
               const requestBodyLogin = {
                 q: "cunetauth",
-                token: response.token,
+                token: response.data.token,
                 student_id: this.state.username,
                 password: this.state.password,
               };
 
               axios
-                .post(
-                  "https://student.eng.chula.ac.th/tstudent/auth/service.php",
+                .post( process.env.REACT_APP_STUDENT_ENG_CHULA_URL,
                   Qs.stringify(requestBodyLogin),
                   config
                 )
@@ -106,14 +105,10 @@ class Login extends Component {
                   switch (response.status) {
                     // Created
                     case 200:
-                      var nameBytes = response.data.name;
-                      var nameText = nameBytes.toString(CryptoJS.enc.Utf16);
-                      var majorBytes = response.data.name;
-                      var majorText = majorBytes.toString(CryptoJS.enc.Utf16);
-
-                      var nameEncrypt = CryptoJS.AES.encrypt(nameText, 'username').toString();
+                      console.log(response.data);
+                      var nameEncrypt = CryptoJS.AES.encrypt(response.data.name, 'username').toString();
                       var idEncrypt = CryptoJS.AES.encrypt(response.data.student_id, 'id').toString();
-                      var majorEncrypt = CryptoJS.AES.encrypt(majorText, 'major').toString();
+                      var majorEncrypt = CryptoJS.AES.encrypt(response.data.department, 'major').toString();
 
                       SessionStorageService.setUserName(nameEncrypt);
                       SessionStorageService.setUserID(idEncrypt);
@@ -138,6 +133,7 @@ class Login extends Component {
 
             // Other case
             default:
+              console.log("token fail");
               console.log("Status code is " + response.status);
           }
         });

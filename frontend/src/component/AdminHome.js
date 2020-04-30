@@ -6,7 +6,6 @@ import "./AdminHome.css";
 import { Pie } from "react-chartjs-2";
 import SessionStorageService from "../SessionStorageService";
 import LoadSpinner from "./LoadSpinner";
-var utilities = require("../Utilities.json");
 var Qs = require("qs");
 
 class AdminHome extends Component {
@@ -66,7 +65,7 @@ class AdminHome extends Component {
     };
     axios
       .post(
-        utilities["backend-url"] + "/api.php",
+        process.env.REACT_APP_BACKEND_URL,
         Qs.stringify(requestBody),
         config
       )

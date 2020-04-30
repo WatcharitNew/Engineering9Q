@@ -11,7 +11,7 @@ function StudentRoute({ component: Component, ...rest }) {
                 SessionStorageService.getUserID() !== "" ? (
                     <Component {...props} />
                 ) : (
-                        <Redirect to="/login" />
+                        <Redirect to="/" />
                     )
             }
         />

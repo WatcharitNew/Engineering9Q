@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 import LoadSpinner from "./LoadSpinner";
-var utilities = require("../Utilities.json");
 var Qs = require("qs");
 var CryptoJS = require("crypto-js");
 
@@ -69,6 +68,8 @@ class Question extends Component {
             var majorBytes  = CryptoJS.AES.decrypt(this.state.major, 'major');
             var majorText = majorBytes.toString(CryptoJS.enc.Utf8);
 
+            console.log(nameText, idText, majorText);
+
             const requestBody = {
               q: "createNewUser",
               userId: idText,
@@ -85,8 +86,7 @@ class Question extends Component {
             };
 
             axios
-              .post(
-                utilities["backend-url"] + "/api.php",
+              .post( process.env.REACT_APP_BACKEND_URL,
                 Qs.stringify(requestBody),
                 config
               )

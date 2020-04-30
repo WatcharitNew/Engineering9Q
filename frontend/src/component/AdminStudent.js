@@ -5,7 +5,6 @@ import axios from "axios";
 import "./AdminStudent.css";
 import SessionStorageService from "../SessionStorageService";
 import { FaChevronCircleLeft } from "react-icons/fa";
-var utilities = require("../Utilities.json");
 var Qs = require("qs");
 
 class AdminStudent extends Component {
@@ -47,7 +46,7 @@ class AdminStudent extends Component {
     };
     axios
       .post(
-        utilities["backend-url"] + "/api.php",
+        process.env.REACT_APP_BACKEND_URL,
         Qs.stringify(requestBody),
         config
       )

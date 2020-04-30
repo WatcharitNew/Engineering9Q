@@ -13,7 +13,7 @@ function AdminRoute({ component: Component, ...rest }) {
                 originalText === "admin" ? (
                     <Component {...props} />
                 ) : (
-                        <Redirect to="/login" />
+                        <Redirect to="/" />
                     )
             }
         />

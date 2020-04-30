@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
-import Home from "./component/Home";
 import Question from "./component/Question";
 import Summary from "./component/Summary";
 import Instruction from "./component/Instruction";
@@ -24,7 +23,7 @@ class App extends Component {
             <StudentRoute path="/instruction" component={() => <Instruction />} />
             <StudentRoute path="/question" component={() => <Question />} />
             <StudentRoute path="/summary" component={() => <Summary />} />
-            <Route exact path="/login" component={() => <Login />} />
+            <Route exact path="/" component={() => <Login />} />
             <AdminRoute path="/admin/home" component={() => <AdminHome />} />
             <AdminRoute path="/admin/student" component={() => <AdminStudent />} />
           </Switch>

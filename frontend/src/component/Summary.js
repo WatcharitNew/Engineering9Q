@@ -5,7 +5,6 @@ import SessionStorageService from "../SessionStorageService";
 import axios from "axios";
 import Swal from "sweetalert2";
 import LoadSpinner from "./LoadSpinner";
-var utilities = require("../Utilities.json");
 var Qs = require("qs");
 var CryptoJS = require("crypto-js");
 
@@ -186,7 +185,7 @@ class Summary extends Component {
 
           axios
             .post(
-              utilities["backend-url"] + "/api.php",
+              process.env.REACT_APP_BACKEND_URL,
               Qs.stringify(requestBody),
               config
             )
