@@ -33,7 +33,9 @@ class Login extends Component {
                   as="input"
                   placeholder="Username"
                   onChange={(e) => {
-                    this.setState({ username: e.target.value });
+                    if (e.target.value.length <= 10) {
+                      this.setState({ username: e.target.value });
+                    }
                   }}
                   value={this.state.username}
                 />
@@ -51,6 +53,11 @@ class Login extends Component {
                     this.setState({ password: e.target.value });
                   }}
                   value={this.state.password}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13) {
+                      this.submit();
+                    }
+                  }}
                 />
               </Col>
             </Row>
@@ -80,7 +87,8 @@ class Login extends Component {
       };
 
       axios
-        .post( process.env.REACT_APP_STUDENT_ENG_CHULA_URL,
+        .post(
+          process.env.REACT_APP_STUDENT_ENG_CHULA_URL,
           Qs.stringify(requestBody),
           config
         )
@@ -96,36 +104,57 @@ class Login extends Component {
               };
 
               axios
-                .post( process.env.REACT_APP_STUDENT_ENG_CHULA_URL,
+                .post(
+                  process.env.REACT_APP_STUDENT_ENG_CHULA_URL,
                   Qs.stringify(requestBodyLogin),
                   config
                 )
-                .then((response) => {
-                  switch (response.status) {
-                    // Created
-                    case 200:
-                      var nameEncrypt = CryptoJS.AES.encrypt(response.data.data.name, 'username').toString();
-                      var idEncrypt = CryptoJS.AES.encrypt(response.data.data.student_id, 'id').toString();
-                      var majorEncrypt = CryptoJS.AES.encrypt(response.data.data.department, 'major').toString();
-                      
-                      SessionStorageService.setUserName(nameEncrypt);
-                      SessionStorageService.setUserID(idEncrypt);
-                      SessionStorageService.setMajor(majorEncrypt);
-                      this.setState({ redirectToInstruction: true });
-                      this.setState({ username: "", password: "" });
-                      break;
-
-                    // Other case
-                    default:
-                      Swal.fire({
-                        html: "Username or Password is fault",
-                        icon: 'error',
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "ตกลง",
-                      });
-                      console.log("Status code is " + response.status);
-                  }
+                .catch(() => {
                   this.setState({ username: "", password: "" });
+                  Swal.fire({
+                    html: "Username or Password is invalid",
+                    icon: "error",
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "ตกลง",
+                  });
+                  return null;
+                })
+                .then((response) => {
+                  if (response !== null) {
+                    switch (response.status) {
+                      // Created
+                      case 200:
+                        var nameEncrypt = CryptoJS.AES.encrypt(
+                          response.data.data.name,
+                          "username"
+                        ).toString();
+                        var idEncrypt = CryptoJS.AES.encrypt(
+                          response.data.data.student_id,
+                          "id"
+                        ).toString();
+                        var majorEncrypt = CryptoJS.AES.encrypt(
+                          response.data.data.department,
+                          "major"
+                        ).toString();
+
+                        SessionStorageService.setUserName(nameEncrypt);
+                        SessionStorageService.setUserID(idEncrypt);
+                        SessionStorageService.setMajor(majorEncrypt);
+                        this.setState({ username: "", password: "" });
+                        this.setState({ redirectToInstruction: true });
+                        break;
+
+                      default:
+                        Swal.fire({
+                          html: "Username or Password is invalid",
+                          icon: "error",
+                          confirmButtonColor: "#3085d6",
+                          confirmButtonText: "ตกลง",
+                        });
+                        console.log("Status code is " + response.status);
+                        break;
+                    }
+                  }
                 });
               break;
 
@@ -135,8 +164,6 @@ class Login extends Component {
           }
         });
     }
-
-    
   };
 
   submitBtn = () => {
@@ -162,7 +189,7 @@ class Login extends Component {
     if (this.state.redirectToAdminHome) {
       return <Redirect to="/admin/home" />;
     }
-    if(this.state.redirectToInstruction) {
+    if (this.state.redirectToInstruction) {
       return <Redirect to="/instruction" />;
     }
     return (

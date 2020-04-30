@@ -20,10 +20,10 @@ class App extends Component {
       <div>
         <Router>
           <Switch>
+            <Route exact path="/" component={() => <Login />} />
             <StudentRoute path="/instruction" component={() => <Instruction />} />
             <StudentRoute path="/question" component={() => <Question />} />
             <StudentRoute path="/summary" component={() => <Summary />} />
-            <Route exact path="/" component={() => <Login />} />
             <AdminRoute path="/admin/home" component={() => <AdminHome />} />
             <AdminRoute path="/admin/student" component={() => <AdminStudent />} />
           </Switch>
