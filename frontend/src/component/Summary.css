@@ -16,3 +16,32 @@
 #summary-tel-box {
   margin-top: 10vh;
 }
+.right-to-center, .right-to-center-small {
+  text-align: right;
+}
+.left-to-center, .left-to-center-small {
+  text-align: left;
+}
+.justify-content-xl-center {
+  justify-content: center;
+}
+
+@media (max-width: 991px) 
+{
+  .right-to-center {
+    text-align: center;
+  }
+  .left-to-center {
+    text-align: center;
+  }
+}
+
+@media (max-width: 767px) 
+{
+  .right-to-center-small {
+    text-align: center;
+  }
+  .left-to-center-small {
+    text-align: center;
+  }
+}

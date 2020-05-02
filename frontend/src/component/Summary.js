@@ -19,8 +19,8 @@ class Summary extends Component {
         SessionStorageService.getFinish() === ""
           ? "false"
           : SessionStorageService.getFinish(),
-      showDetail: [false, false, false],
-      helpDetail: ["", "", ""],
+      showDetail: [false, false, false, false],
+      helpDetail: ["", "", "", ""],
       stressDetail: "",
       requestHelp: -1,
       setLoading: false,
@@ -101,6 +101,7 @@ class Summary extends Component {
     const helpList = [
       <h5>ด้านการเรียน</h5>,
       <h5>ด้านสุขภาพ</h5>,
+      <h5>ด้านครอบครัว</h5>,
       <h5>อื่นๆ</h5>,
     ];
     return helpList.map((help, idx) => (
@@ -159,7 +160,10 @@ class Summary extends Component {
           var helpHealth = this.state.showDetail[1]
             ? this.state.helpDetail[1]
             : "";
-          var helpOther = this.state.showDetail[2]
+          var helpFamily = this.state.showDetail[2]
+            ? this.state.helpDetail[2]
+            : "";
+          var helpOther = this.state.showDetail[3]
             ? this.state.helpDetail[2]
             : "";
 
@@ -170,6 +174,7 @@ class Summary extends Component {
             userId: idText,
             helpStudy: helpStudy,
             helpHealth: helpHealth,
+            helpFamily: helpFamily,
             helpOther: helpOther,
             worryText: this.state.stressDetail,
             isWantPsychologist: this.state.requestHelp === 0 ? 1 : 0,
@@ -333,29 +338,47 @@ class Summary extends Component {
       <div>
         <Container id="summary-tel-box">
           {this.questionDisp("ขอบคุณที่ร่วมทำแบบประเมิน")}
-          {this.contentDisp("แหล่งอ้างอิง : กรมสุขภาพจิต กระทรวงสาธารณสุข")}
+          <Row className="justify-content-xl-center">
+            <Col xl="5" lg="4" md="3" sm="9" className="right-to-center-small">
+              <h4>แหล่งอ้างอิง :</h4>
+            </Col>
+            <Col xl="7" lg="7" md="7" sm="9" className="left-to-center-small">
+              <h4>กรมสุขภาพจิต กระทรวงสาธารณสุข</h4>
+            </Col>
+          </Row>
         </Container>
         <Container id="summary-tel-box">
           {this.questionDisp(
             "หากนิสิตต้องการความช่วยเหลือหรือมีปัญหาสามารถปรึกษาได้ที่"
           )}
-          {this.contentDisp(
-            "หน่วยส่งเสริมสุขภาวะนิสิต (ศูนย์ให้บริการปรึกษาเชิงจิตวิทยาสำหรับนิสิต)"
-          )}
-          <Row>
-            <Col className="text-center mb-3">
+          <Row className="justify-content-xl-center">
+            <Col xl="5" lg="5" md="12" className="right-to-center">
+              <h4>หน่วยส่งเสริมสุขภาวะนิสิต</h4>
+            </Col>
+            <Col xl="7" lg="7" md="12" className="left-to-center">
+              <h4>(ศูนย์ให้บริการปรึกษาเชิงจิตวิทยาสำหรับนิสิต)</h4>
+            </Col>
+          </Row>
+          <Row className="justify-content-xl-center mb-3">
+            <Col xl="5" lg="5" md="12" className="right-to-center">
+              <h4>เบอร์โทร 02 218 0540</h4>
+            </Col>
+            <Col xl="6" lg="6" md="12" className="left-to-center">
               <h4>
-                เบอร์โทร 02 218 0540 website :
                 <a href="https://wellness.chula.ac.th/">
-                  {" "}
-                  wellness.chula.ac.th
+                  website : wellness.chula.ac.th
                 </a>
               </h4>
             </Col>
           </Row>
-          {this.contentDisp(
-            "ภารกิจกิจการนิสิตคณะวิศวกรรมศาสตร์ เบอร์โทร 02 218 6349"
-          )}
+          <Row className="justify-content-xl-center">
+            <Col lg="7" md="12" className="right-to-center">
+              <h4>ภารกิจกิจการนิสิตคณะวิศวกรรมศาสตร์</h4>
+            </Col>
+            <Col lg="5" md="12" className="left-to-center">
+              <h4>เบอร์โทร 02 218 6349</h4>
+            </Col>
+          </Row>
           <Row>
             <Col className="text-center mb-3">
               <h4>
@@ -365,7 +388,14 @@ class Summary extends Component {
               </h4>
             </Col>
           </Row>
-          {this.contentDisp("ภารกิจทะเบียนและประเมินผล เบอร์โทร 02 218 6300")}
+          <Row className="justify-content-xl-center">
+            <Col lg="5" md="12" className="right-to-center">
+              <h4>ภารกิจทะเบียนและประเมินผล</h4>
+            </Col>
+            <Col lg="5" md="12" className="left-to-center">
+              <h4>เบอร์โทร 02 218 6300</h4>
+            </Col>
+          </Row>
           <Row>
             <Col className="text-center">
               <h4>

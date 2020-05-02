@@ -12,3 +12,6 @@
     cursor: pointer;
     background-color: #d3d3d3;
 }
+.slide-box {
+    white-space: nowrap;
+}

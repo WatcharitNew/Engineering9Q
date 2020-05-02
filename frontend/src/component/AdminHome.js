@@ -33,22 +33,6 @@ class AdminHome extends Component {
         twostar: [],
         threestar: [],
       },
-      major: {
-        cp: "คอมพิวเตอร์",
-        chem: "เคมี",
-        ne: "นิวเคลียร์",
-        me: "เครื่องกล",
-        ee: "ไฟฟ้า",
-        ce: "โยธา",
-        metal: "โลหการ",
-        sv: "สำรวจ",
-        env: "สิ่งแวดล้อม",
-        mining: "เหมืองแร่และปิโตรเลียม",
-        water: "แหล่งน้ำ",
-        ie: "อุตสาหการ",
-        bme: "ชีวเวช",
-        ise: "ISE",
-      },
       redirectToAdminStudent: false,
     };
   }
@@ -152,7 +136,7 @@ class AdminHome extends Component {
   tableHeader = () => {
     if (this.state.filter === this.state.status.GRAPH) return;
     return (
-      <thead>
+      <thead className="bg-dark text-light">
         <tr className="text-center">
           <td className="align-middle">
             <h5>ชื่อ</h5>
@@ -174,7 +158,7 @@ class AdminHome extends Component {
   graphDisplay = () => {
     const options = {
       display: true,
-      position: "right",
+      position: "bottom",
       fullWidth: true,
       reverse: false,
       lineWidth: 100,
@@ -191,7 +175,8 @@ class AdminHome extends Component {
               labels: this.state.labels,
               datasets: this.state.datasets,
             }}
-            options={{ legend: options }}
+            options={{ legend: options, maintainAspectRatio: false }}
+            height={500}
           />
         </div>
       </Col>
@@ -226,13 +211,13 @@ class AdminHome extends Component {
         className="text-left link-to-detail"
         onClick={() => this.linkToDetail(this.state.userDatas[id].userId)}
       >
-        <td className="align-middle">
+        <td className="align-middle slide-box">
           <h5>{this.state.userDatas[id].name}</h5>
         </td>
         <td className="align-middle text-center">
           <h5>{this.state.userDatas[id].userId}</h5>
         </td>
-        <td className="align-middle text-center">
+        <td className="align-middle text-center slide-box">
           <h5>{this.state.userDatas[id].major}</h5>
         </td>
         <td className="align-middle text-center">
@@ -242,7 +227,7 @@ class AdminHome extends Component {
     ));
 
     return (
-      <Table responsive>
+      <Table responsive striped bordered hover>
         {this.tableHeader()}
         <tbody>{data}</tbody>
       </Table>

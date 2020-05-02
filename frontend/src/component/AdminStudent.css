@@ -1,17 +1,23 @@
 #admin-student {
-    background-color: white;
-    border-radius: 20px;
-    margin-bottom: 20px;
+  background-color: white;
+  border-radius: 20px;
+  margin-bottom: 20px;
 }
 .want {
-    color: red;
+  color: red;
 }
 .not-want {
-    color: blue;
+  color: blue;
 }
 .admin-backbtn {
-    float: left;
-    position: fixed;
-    top: 50px;
-    z-index: 9999;
+  float: left;
+  position: fixed;
+  top: 50px;
+  z-index: 9999;
+}
+.worry-box {
+  white-space: normal;
+  word-break: break-all;
+  word-wrap: break-word;
+  width: 100%;
 }
