@@ -164,7 +164,7 @@ class Summary extends Component {
             ? this.state.helpDetail[2]
             : "";
           var helpOther = this.state.showDetail[3]
-            ? this.state.helpDetail[2]
+            ? this.state.helpDetail[3]
             : "";
 
           var idBytes = CryptoJS.AES.decrypt(this.state.userID, "id");

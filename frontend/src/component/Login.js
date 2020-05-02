@@ -76,8 +76,8 @@ class Login extends Component {
     } else {
       const requestBody = {
         q: "token",
-        client_key: "a829304hjuy7yh8gh",
-        client_secret: "hbu4t5nifvj9",
+        client_key: process.env.REACT_APP_STUDENT_ENG_CHULA_CLIENT_KEY,
+        client_secret: process.env.REACT_APP_STUDENT_ENG_CHULA_CLIENT_SECRET,
       };
 
       const config = {
