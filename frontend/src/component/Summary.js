@@ -85,7 +85,7 @@ class Summary extends Component {
             placeholder="อธิบายเพิ่มเติม"
             onChange={(e) => {
               if (this.detailHandler(e.target.value)) {
-                if(e.target.value.length <= this.state.maxLength){
+                if (e.target.value.length <= this.state.maxLength) {
                   var helpDetail = this.state.helpDetail;
                   helpDetail[idx] = e.target.value;
                   this.setState({ helpDetail: helpDetail });
@@ -94,7 +94,7 @@ class Summary extends Component {
             }}
             value={this.state.helpDetail[idx]}
           />
-          <p className="text-right">{this.state.helpDetail[idx].length + "/" + this.state.maxLength}</p>
+          <p className={this.state.helpDetail[idx].length === this.state.maxLength ? "text-right text-danger" : "text-right"}>{this.state.helpDetail[idx].length + "/" + this.state.maxLength}</p>
         </Col>
       );
     }
@@ -226,27 +226,27 @@ class Summary extends Component {
   stressAnswerDisp = () => {
     return (
       <div>
-      <Form.Control
-        as="textarea"
-        rows="2"
-        onChange={(e) => {
-          if (this.detailHandler(e.target.value)) {
-            if(e.target.value.length <= this.state.maxLength){
-              this.setState({ stressDetail: e.target.value });
+        <Form.Control
+          as="textarea"
+          rows="2"
+          onChange={(e) => {
+            if (this.detailHandler(e.target.value)) {
+              if (e.target.value.length <= this.state.maxLength) {
+                this.setState({ stressDetail: e.target.value });
+              }
+            } else {
+              Swal.fire({
+                html: "กรุณาพิมพ์ภาษาไทย ภาษาอังกฤษ ตัวเลข และเว้นวรรคเท่านั้น",
+                icon: "info",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "ตกลง",
+              });
             }
-          } else {
-            Swal.fire({
-              html: "กรุณาพิมพ์ภาษาไทย ภาษาอังกฤษ ตัวเลข และเว้นวรรคเท่านั้น",
-              icon: "info",
-              confirmButtonColor: "#3085d6",
-              confirmButtonText: "ตกลง",
-            });
-          }
-        }}
-        value={this.state.stressDetail}
-        placeholder="อธิบายเพิ่มเติม"
-      />
-        <p className="text-right">{this.state.stressDetail.length + "/" + this.state.maxLength}</p>
+          }}
+          value={this.state.stressDetail}
+          placeholder="อธิบายเพิ่มเติม"
+        />
+        <p className={this.state.stressDetail.length === this.state.maxLength ? "text-right text-danger" : "text-right"}>{this.state.stressDetail.length + "/" + this.state.maxLength}</p>
       </div>
     );
   };
