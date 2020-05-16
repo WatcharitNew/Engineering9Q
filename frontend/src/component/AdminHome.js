@@ -6,6 +6,8 @@ import "./AdminHome.css";
 import { Pie } from "react-chartjs-2";
 import SessionStorageService from "../SessionStorageService";
 import LoadSpinner from "./LoadSpinner";
+import { FaFileDownload } from "react-icons/fa";
+import { CSVLink } from "react-csv";
 var Qs = require("qs");
 
 class AdminHome extends Component {
@@ -35,9 +37,10 @@ class AdminHome extends Component {
       },
       redirectToAdminStudent: false,
     };
+    this.fetchData = this.fetchData.bind(this);
   }
 
-  fetchData = () => {
+  async fetchData() {
     const requestBody = {
       q: "getUserByFilter",
     };
@@ -47,7 +50,7 @@ class AdminHome extends Component {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     };
-    axios
+    await axios
       .post(
         process.env.REACT_APP_BACKEND_URL,
         Qs.stringify(requestBody),
@@ -92,40 +95,54 @@ class AdminHome extends Component {
 
   tabHeader = () => {
     return (
-      <Nav variant="tabs" defaultActiveKey="link-1">
-        <Nav.Item>
-          <Nav.Link
-            eventKey="link-1"
-            onClick={(e) => this.filterHandler(e, this.state.status.GRAPH)}
-          >
-            <h5>Graph</h5>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link
-            eventKey="link-2"
-            onClick={(e) => this.filterHandler(e, this.state.status.ONESTAR)}
-          >
-            <h5>One Star</h5>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link
-            eventKey="link-3"
-            onClick={(e) => this.filterHandler(e, this.state.status.TWOSTAR)}
-          >
-            <h5>Two Star</h5>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link
-            eventKey="link-4"
-            onClick={(e) => this.filterHandler(e, this.state.status.THREESTAR)}
-          >
-            <h5>Three Star</h5>
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
+      <div>
+        <Nav justify variant="tabs" defaultActiveKey="link-1">
+          <Nav.Item>
+            <Nav.Link
+              eventKey="link-1"
+              onClick={(e) => this.filterHandler(e, this.state.status.GRAPH)}
+            >
+              <h5>Graph</h5>
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              eventKey="link-2"
+              onClick={(e) => this.filterHandler(e, this.state.status.ONESTAR)}
+            >
+              <h5>One Star</h5>
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              eventKey="link-3"
+              onClick={(e) => this.filterHandler(e, this.state.status.TWOSTAR)}
+            >
+              <h5>Two Star</h5>
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              eventKey="link-4"
+              onClick={(e) =>
+                this.filterHandler(e, this.state.status.THREESTAR)
+              }
+            >
+              <h5>Three Star</h5>
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <CSVLink
+              data={this.state.userDatas}
+              filename={"data.csv"}
+              className="btn btn-success"
+              target="_blank"
+            >
+              <FaFileDownload /> Download .csv
+            </CSVLink>
+          </Nav.Item>
+        </Nav>
+      </div>
     );
   };
 
